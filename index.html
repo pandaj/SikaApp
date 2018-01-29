@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	
+	<link rel='shortcut icon' type="image/x-icon" href="img/favicon.ico" />
+	<link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+	<title>Administrador SIKA</title>
+
+	<link href="library/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="library/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+
+	<script src="cordova.js"></script>
+	<script src="library/jquery/jquery-1.10.2.js"></script>
+	<script src="js/main.js"></script>
+	<script>
+		loginRedirige('home', 99);
+	</script>
+</head>
+<body class="app flex-row align-items-center">
+	<div class="container" style="display:none;">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card-group">
+					<div class="card p-4">
+						<div class="card-body" style="background:#f6b100; text-align:center;">
+							<img src="img/logo-sika.png" />
+						</div>
+						<form class="card-body" action="" method="POST">
+							<div id="vacio">
+								<div class="alert alert-danger" style="display:none;">Datos incorrectos, por favor verifica los datos.</div>
+							</div>
+							<p class="text-muted">Ingresa con tu cuenta</p>
+							<div class="input-group mb-3">
+								<span class="input-group-addon"><i class="icon-user"></i></span>
+								<input type="email" name="usuario" class="form-control" placeholder="Email" maxlength="100" />
+							</div>
+							<div class="input-group mb-4">
+								<span class="input-group-addon"><i class="icon-lock"></i></span>
+								<input type="password" name="password" class="form-control" placeholder="Password" maxlength="100" />
+							</div>
+							<div class="row">
+								<div class="col-6">
+									<button type="button" class="btn btn-primary px-4" onClick="login();">Ingresar</button>
+								</div>
+								<div class="col-6 text-right">
+									<button type="button" class="btn btn-link px-0" onClick="olvidaPass();">Olvidaste tu contraseña?</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap and necessary plugins -->
+	<script src="library/popper/popper.min.js"></script>
+	<script src="library/bootstrap/bootstrap.min.js"></script>
+	<script>
+		function login() {
+			if ( $('input[name=usuario]').val().length > 4 && $('input[name=password]').val().length > 4) {
+				$('form').submit();
+			} else {
+				$('#vacio').html('<div class="alert alert-danger">Por favor, complete todos los datos.</div>');
+			}
+		}
+		$(document).ready(function(e) {
+			$('.container').fadeIn(500);
+        });
+	</script>
+
+</body>
+</html>
