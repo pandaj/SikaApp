@@ -15,9 +15,14 @@
 	<link href="css/style.css" rel="stylesheet">
 
 	<script src="cordova.js"></script>
+	<script src="library/jquery/jquery-1.10.2.js"></script>
+	<script src="js/main.js"></script>
+	<script>
+		loginRedirige('home', 0);
+	</script>
 </head>
 <body class="app flex-row align-items-center">
-	<div class="container">
+	<div class="container" style="display:none;">
 		<div class="row justify-content-center">
 			<div class="col-md-8">
 				<div class="card-group">
@@ -50,5 +55,62 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Bootstrap and necessary plugins -->
+	<script src="library/popper/popper.min.js"></script>
+	<script src="library/bootstrap/bootstrap.min.js"></script>
+	<script>
+		var activaLogin = true;
+	
+		function login() {
+			if (activaLogin) {
+				if ( $('input[name=usuario]').val().length > 4 && $('input[name=password]').val().length > 4) {
+					if (window.internet) {
+						activaLogin = false;
+						$.ajax({
+							url : window.dataURL + 'login.php',
+							type: 'GET',
+							data: {
+								usuario  : $('input[name=usuario]').val(),
+								password : $('input[name=password]').val()
+							}
+						}).done(function(txt) {
+							if (txt.substr(0,5) == 'Exito') {
+								$('#vacio').html('<div class="alert alert-success">LOGIN CORRECTO</div>');
+								var rawDatos = txt.split('<-x_x->');
+								var losDatos = new Array();
+								losDatos['id'] = rawDatos[1];
+								losDatos['nombre'] = rawDatos[2];
+								losDatos['email'] = rawDatos[3];
+								losDatos['foto'] = rawDatos[4];
+								losDatos['acceso'] = parseInt(rawDatos[5]);
+								losDatos['pass'] = rawDatos[6];
+								window.localStorage.setItem("usuario", losDatos);
+								setTimeout(function() {
+									location.href = 'home.html';
+								}, 1000);
+							} else {
+								activaLogin = true;
+								$('#vacio').html('<div class="alert alert-danger">'+ txt +'</div>');
+							}
+						});
+					}
+					$('form').submit();
+				} else {
+					$('#vacio').html('<div class="alert alert-danger">Por favor, complete todos los datos.</div>');
+				}
+			} else {
+				$('#vacio').html('<div class="alert alert-danger">Necesitas conectarte a internet para ingresar.</div>');
+			}
+		}
+		function olvidaPass(){
+			alert('RECUPERA PASSWORD');
+		}
+		
+		$(document).ready(function(e) {
+			$('.container').fadeIn(500);
+        });
+	</script>
+
 </body>
 </html>
