@@ -60,6 +60,7 @@
 				if ( $('input[name=usuario]').val().length > 4 && $('input[name=password]').val().length > 4) {
 					if (window.internet) {
 						activaLogin = false;
+						$('form.card-body').css({opacity:0.3});
 						$.ajax({
 							url : window.dataURL + 'login.php',
 							type: 'GET',
@@ -84,15 +85,16 @@
 								}, 1000);
 							} else {
 								activaLogin = true;
+								$('form.card-body').css({opacity:1});
 								$('#vacio').html('<div class="alert alert-danger">'+ txt +'</div>');
 							}
 						});
+					} else {
+						$('#vacio').html('<div class="alert alert-danger">Necesitas conectarte a internet para ingresar.</div>');
 					}
 				} else {
 					$('#vacio').html('<div class="alert alert-danger">Por favor, complete todos los datos.</div>');
 				}
-			} else {
-				$('#vacio').html('<div class="alert alert-danger">Necesitas conectarte a internet para ingresar.</div>');
 			}
 		}
 		function olvidaPass(){

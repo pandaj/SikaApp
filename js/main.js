@@ -3,7 +3,6 @@ window.dataURL = 'http://appsredon.cl/apps/sikaform/connect/';
 
 
 // Detecta si hay conexion a internet o no
-window.internet = false;
 function detectaConexion() {
 	var networkState = navigator.network.connection.type;
 	var states = new Array();
@@ -21,9 +20,8 @@ function detectaConexion() {
 		return true;
 	}
 }
-$(document).ready(function(e) {
-	window.internet = detectaConexion();
-});
+//window.internet = detectaConexion();
+window.internet = true;
 
 
 // Valida Login
