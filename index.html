@@ -17,6 +17,9 @@
 	<script src="cordova.js"></script>
 	<script src="library/jquery/jquery-1.10.2.js"></script>
 	<script src="js/main.js"></script>
+	<script>
+		loginRedirige('home', 0);
+	</script>
 </head>
 <body class="app flex-row align-items-center">
 	<div class="container" style="display:none;">
@@ -54,7 +57,6 @@
 	</div>
 	<script>
 		var activaLogin = true;
-	
 		function login() {
 			if (activaLogin) {
 				if ( $('input[name=usuario]').val().length > 4 && $('input[name=password]').val().length > 4) {
@@ -72,14 +74,15 @@
 							if (txt.substr(0,5) == 'Exito') {
 								$('#vacio').html('<div class="alert alert-success">LOGIN CORRECTO</div>');
 								var rawDatos = txt.split('<-x_x->');
-								var losDatos = new Array();
-								losDatos['id'] = rawDatos[1];
-								losDatos['nombre'] = rawDatos[2];
-								losDatos['email'] = rawDatos[3];
-								losDatos['foto'] = rawDatos[4];
-								losDatos['acceso'] = parseInt(rawDatos[5]);
-								losDatos['pass'] = rawDatos[6];
-								window.localStorage.setItem("usuario", losDatos);
+								var losDatos = {
+									id		: rawDatos[1],
+									nombre	: rawDatos[2],
+									email	: rawDatos[3],
+									foto	: rawDatos[4],
+									acceso	: parseInt(rawDatos[5]),
+									pass	: rawDatos[6]
+								};
+								window.localStorage.setItem("usuario", JSON.stringify(losDatos) );
 								setTimeout(function() {
 									location.href = 'home.html';
 								}, 1000);

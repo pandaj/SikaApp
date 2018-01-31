@@ -105,30 +105,8 @@ endforeach;
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
 
 	<!-- Header -->
-	<header class="app-header navbar">
-		<button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<a class="navbar-brand" href="dashboard.php">
-			<img src="img/logo-sika.png" width="100%" />
-		</a>
-		<button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<ul class="nav navbar-nav ml-auto">
-			<li class="nav-item dropdown">
-				<div class="nav-link dropdown-toggle nav-link">
-					<span id="userdata-nombre">...</span> 
-					<img src="img/avatares/<?php echo $user['foto']; ?>" class="img-avatar" />
-				</div>
-			</li>
-			<li class="nav-item d-md-down-none">
-				<a class="nav-link" href="logout.html">
-					<i class="fa fa-lock"></i> Logout
-				</a>
-			</li>
-			<li class="nav-item d-md-down-none"></li>
-		</ul>
+	<header id="header" class="app-header navbar">
+		<script> loadHeader(); </script>
 	</header>
 	<!-- FIN Header -->
 
@@ -136,63 +114,8 @@ endforeach;
 	<div class="app-body">
 
 		<!-- Menu Lateral -->
-		<div class="sidebar">
-			<nav class="sidebar-nav">
-				<ul class="nav">
-					<li class="nav-item">
-						<a id="btn-1" class="nav-link" href="home.html">
-							<i class="icon-star"></i> Mis Estadisticas
-						</a>
-					</li>
-					<li class="nav-item">
-						<a id="btn-2" class="nav-link" href="registro.html">
-							<i class="icon-plus"></i> Registrar Cliente
-						</a>
-					</li>
-					<li class="nav-item acceso3">
-						<a id="btn-3" class="nav-link" href="estadisticas.html">
-							<i class="icon-chart"></i> Estadisticas Generales
-						</a>
-					</li>
-					<li class="nav-title acceso3">
-						Datos Detallados
-					</li>
-					<li class="nav-item acceso3">
-						<a id="btn-4" class="nav-link" href="datos_clientes.html">
-							<i class="icon-list"></i> Clientes Únicos
-						</a>
-					</li>
-					<li class="nav-item acceso3">
-						<a id="btn-5" class="nav-link" href="datos_clientes_cmp.html">
-							<i class="icon-list"></i> Clientes por Campaña
-						</a>
-					</li>
-					<li class="nav-item acceso3">
-						<a id="btn-6" class="nav-link" href="datos_clientes_lgr.html">
-							<i class="icon-list"></i> Clientes por Lugar
-						</a>
-					</li>
-					<li class="nav-item acceso3">
-						<a id="btn-7" class="nav-link" href="datos_clientes_usr.html">
-							<i class="icon-list"></i> Clientes por Usuario
-						</a>
-					</li>
-					<li class="nav-title acceso5">
-						Administración
-					</li>
-					<li class="nav-item acceso7">
-							<a id="btn-8" class="nav-link" href="edit_users.html">
-								<i class="icon-people"></i> Admin. Usuarios
-							</a>
-						</li>
-					<li class="nav-item acceso5">
-						<a id="btn-9" class="nav-link" href="edit_campa.html">
-							<i class="icon-settings"></i> Admin. Campañas
-						</a>
-					</li>
-				</ul>
-			</nav>
-			<button class="sidebar-minimizer brand-minimizer" type="button"></button>
+		<div id="side-menu" class="sidebar">
+			<script> loadMenu(); </script>
 		</div>
 		<!-- FIN Menu Lateral -->
 
@@ -213,7 +136,7 @@ endforeach;
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-primary">
 								<div class="card-body pb-0">
-									<h4 class="mb-0"><?php echo ponePuntos($clientesTotal); ?></h4>
+									<h4 class="mb-0">ponePuntos($clientesTotal);</h4>
 									<p>Clientes Registrados</p>
 								</div>
 							</div>
@@ -221,15 +144,15 @@ endforeach;
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-success">
 								<div class="card-body pb-0">
-									<h4 class="mb-0" id="campa-all"><?php echo $accesoNames[ $user['acceso'] ]; ?></h4>
-									<p>Nivel de Acceso <?php echo $user['acceso']; ?></p>
+									<h4 class="mb-0">$accesoNames[ $user['acceso'] ];</h4>
+									<p>Nivel de Acceso $user['acceso'];</p>
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-warning">
 								<div class="card-body pb-0">
-									<h4 class="mb-0"><?php echo ponepuntos( count($campasData) ); ?></h4>
+									<h4 class="mb-0">count($campasData)</h4>
 									<p>Campañas Participadas</p>
 								</div>
 							</div>
@@ -237,7 +160,7 @@ endforeach;
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-danger">
 								<div class="card-body pb-0">
-									<h4 class="mb-0"><?php echo ponepuntos( count($lugaresData) ); ?></h4>
+									<h4 class="mb-0">count($lugaresData)</h4>
 									<p>Lugares de Campaña</p>
 								</div>
 							</div>
@@ -251,10 +174,10 @@ endforeach;
 							<div class="row">
 								<div class="col-sm-5">
 									<h4 class="card-title mb-0">Clientes Registrados</h4>
-									<div class="small text-muted">[ <?php echo ponePuntos($clientesTotal); ?> ]</div>
+									<div class="small text-muted" id="carga"></div>
 								</div>
 							</div>
-							<div class="chart-wrapper" style="height:300px;margin-top:40px;">
+							<div class="chart-wrapper" style="height:300px; margin-top:40px;">
 								<canvas id="main-chart" class="chart" height="300"></canvas>
 							</div>
 						</div>
@@ -287,7 +210,7 @@ endforeach;
 											</div>
 											<hr class="mt-0">
 											<ul class="horizontal-bars type-2">
-												<?php 
+												<!--<?php 
 												foreach ($campasData as $campa) :
 													$elNum = $campa['num'];
 													$elPor = round(100 * ($elNum / $clientesTotal) );
@@ -317,7 +240,7 @@ endforeach;
 													</li>
 													<?php
 												endforeach;
-												?>
+												?>-->
 											</ul>
 										</div>
 										<!-- FIN Detalle por Campaña -->
@@ -338,7 +261,7 @@ endforeach;
 											</div>
 											<hr class="mt-0">
 											<ul class="horizontal-bars type-2">
-												<?php 
+												<!--<?php 
 												foreach ($regionData as $region) :
 													$elNum = $region['num'];
 													$elPor = round(100 * ($elNum / $clientesTotal) );
@@ -364,7 +287,7 @@ endforeach;
 													</li>
 													<?php
 												endforeach;
-												?>
+												?>-->
 											</ul>
 										</div>
 										<!-- FIN Detalle por Region -->
@@ -385,7 +308,7 @@ endforeach;
 											</div>
 											<hr class="mt-0">
 											<ul class="horizontal-bars type-2">
-												<?php 
+												<!--<?php 
 												foreach ($lugaresData as $lugar) :
 													$elNum = $lugar['num'];
 													$elPor = round(100 * ($elNum / $clientesTotal) );
@@ -414,7 +337,7 @@ endforeach;
 													</li>
 													<?php
 												endforeach;
-												?>
+												?>-->
 											</ul>
 										</div>
 										<!-- FIN Detalle por Region -->
@@ -443,52 +366,83 @@ endforeach;
 	<script src="js/app.js"></script>
 	<script src="library/pace/pace.min.js"></script>
 	<script src="library/chart/Chart.min.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/common-vars.js"></script>
-
+	<script src="js/comunes.js"></script>
 	<script>
-		accesosMenu();
-
-		//convert Hex to RGBA
-		function convertHex(hex,opacity){
-			hex = hex.replace('#','');
-			var r = parseInt(hex.substring(0,2), 16);
-			var g = parseInt(hex.substring(2,4), 16);
-			var b = parseInt(hex.substring(4,6), 16);
-			var result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
-			return result;
-		}
-		//Random Numbers
-		function random(min,max) {
-			return Math.floor(Math.random()*(max-min+1)+min);
-		}
-		
 		// Carga Datos
 		var datosArray = new Array();
 		var lasFechas = new Array();
 		var fechaIni = '';
-		var fechaFin = '<?php echo $fechaFin; ?>';
-		var totalMax = <?php echo $clientesTotal; ?>;
-		var maxDay = 0;
-		var tempArray;
+		var fechaFin = getFechaHoy();
+		var totalMax = 0;
 		
 		function cargaDatosAsync(num) {
-			<?php
-			$n = 0;
-			echo 'fechaIni = "'.substr($clientes[0]['fecha'], 0, 10).'"; ';
-			foreach ($clientes as $cliente) :
-				echo 'tempArray = new Array(); ';
-				echo 'tempArray["email"] = "'.$cliente['email'].'"; ';
-				echo 'tempArray["fecha"] = "'.$cliente['fecha'].'"; ';
-				echo 'datosArray.push(tempArray); ';
-			endforeach;
-			?>
-			lasFechas = calculaFechas(fechaIni, fechaFin);
-			cuentaDatos();
+			if (window.elUsuario) {
+				
+				var datosCargados = JSON.parse( window.localStorage.getItem("datos_home") );
+				if (datosCargados) {
+					$('#carga').html(' [ DATOS CARGADOS ] ');
+					datosArray = datosCargados.datos;
+					totalMax = datosCargados.total;
+					cuentaDatos();
+				} else {
+					$('#carga').html(' [ Cargando Datos... ] ');
+					$.ajax({
+						url	 : window.dataURL + 'datosHome.php',
+						type : 'GET',
+						data : {
+							usuario : window.elUsuario.email,
+							password: window.elUsuario.pass,
+							pag		: num
+						}
+					}).done(function(txt) {
+						
+						// Si carga Datos
+						if (txt.substr(0,5) != 'Error' && txt != 'FIN') {
+							
+							// Guarda Datos
+							var datosA = txt.split('<xxx>');
+							for (var a = 0; a < datosA.length; a++) {
+								var datosB = datosA[a].split('<xx>');
+								var newDato = new Array();
+								for (var b = 0; b < datosB.length; b++) {
+									var datosC = datosB[b].split('<x>');
+									newDato[ datosC[0] ] = datosC[1];
+								}
+								if (fechaIni == '') {
+									fechaIni = newDato['fecha'];
+									lasFechas = calculaFechas(fechaIni, fechaFin);
+								}
+								datosArray.push(newDato);
+							}
+							
+							// Reinicia Ciclo
+							setTimeout(function() {
+								cargaDatosAsync(num + 1);
+							}, 500);
+							
+						// Termina de cargar datos
+						} else if (txt == 'FIN') {
+							$('#carga').html(' [ DATOS CARGADOS ] ');
+							totalMax = datosArray.length;
+							var losDatosSave = {
+								datos : datosArray,
+								total : totalMax
+							};
+							window.localStorage.setItem("datos_home", JSON.stringify(losDatosSave) );
+							cuentaDatos();
+
+						// Error
+						} else {
+							alert(txt);
+						}
+					});
+				}
+			}
 		}
 		
 		
 		// Cuenta Datos
+		var maxDay = 0;
 		function cuentaDatos() {
 			
 			// Crea Array para Datos del Grafico
@@ -548,24 +502,7 @@ endforeach;
 						pointHoverBackgroundColor	: '#fff',
 						borderWidth					: 2,
 						data						: datos
-					}/*,
-					{
-						label: 'My Second dataset',
-						backgroundColor: 'transparent',
-						borderColor: $.brandSuccess,
-						pointHoverBackgroundColor: '#fff',
-						borderWidth: 2,
-						data: data2
-					},
-					{
-						label: 'My Third dataset',
-						backgroundColor: 'transparent',
-						borderColor: $.brandDanger,
-						pointHoverBackgroundColor: '#fff',
-						borderWidth: 1,
-						borderDash: [8, 5],
-						data: data3
-					}*/
+					}
 				]
 			};
 		
@@ -605,11 +542,8 @@ endforeach;
 		}
 
 
-		// Grafico
-		$(document).ready(function(e) {
-			cargaDatosAsync(1);
-		});
+		// Si hay datos guardados de un usuario
+		cargaDatosAsync(1);
 	</script>
-
 </body>
 </html>
