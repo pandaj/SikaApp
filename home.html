@@ -1,83 +1,3 @@
-<!--
-// Carga Base de Datos
-$configDB = require_once 'config/db.php';
-$conectDB = Zend_Db::factory('Mysqli', $configDB);
-Zend_Db_Table_Abstract::setDefaultAdapter($conectDB);
-
-
-// Carga Clientes del Usuario
-$tablaClien = new Zend_Db_Table('clientes');
-$queryClien = $tablaClien->select()->where('user_id = ?', $user['id']);
-$clientes = $tablaClien->fetchAll($queryClien);
-$clientesTotal = count($clientes);
-
-
-// Busca Lugares
-$tablaLugar = new Zend_Db_Table('lugares');
-function datosLugar($id) {
-	global $tablaLugar;
-	$queryLugar = $tablaLugar->select()->where('lugar_id = ?', $id);
-	$lugarData = $tablaLugar->fetchRow($queryLugar);
-	return $lugarData;
-}
-
-
-// Carga Campañas
-$tablaCampa = new Zend_Db_Table('campas');
-function datosCampa($id) {
-	global $tablaCampa;
-	$queryCampa = $tablaCampa->select()->where('campa_id = ?', $id);
-	$campaData = $tablaCampa->fetchRow($queryCampa);
-	return $campaData;
-}
-
-
-// Conteos de lugares, campañas y regiones
-$lugaresID = array();
-$lugaresData = array();
-$campasID = array();
-$campasData = array();
-$regionID = array();
-$regionData = array();
-foreach ($clientes as $cliente) :
-
-	// Lugares
-	$lugarID = intval($cliente['campa_id']);
-	if (in_array($lugarID, $lugaresID) ) :
-		$lugaresData[ $lugarID ]['num']++;
-	else :
-		$lugaresID[] = $lugarID;
-		$lugaresData[ $lugarID ] = array(
-			'num'	=> 1,
-			'data'	=> datosLugar($lugarID)
-		);
-	endif;
-
-	// Campañas
-	$campaID = intval($cliente['campa_id']);
-	if (in_array($campaID, $campasID) ) :
-		$campasData[ $campaID ]['num']++;
-	else :
-		$campasID[] = $campaID;
-		$campasData[ $campaID ] = array(
-			'num'	=> 1,
-			'data'	=> datosCampa($campaID)
-		);
-	endif;
-
-	// Regiones
-	$regID = $cliente['region'];
-	if (in_array($regID, $regionID) ) :
-		$regionData[ $regID ]['num']++;
-	else :
-		$regionID[] = $regID;
-		$regionData[ $regID ] = array(
-			'num'		=> 1,
-			'nombre'	=> $regionNames[$regID]
-		);
-	endif;
-endforeach;
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -136,23 +56,23 @@ endforeach;
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-primary">
 								<div class="card-body pb-0">
-									<h4 class="mb-0">ponePuntos($clientesTotal);</h4>
+									<h4 class="mb-0" id="clien_total">...</h4>
 									<p>Clientes Registrados</p>
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-success">
-								<div class="card-body pb-0">
-									<h4 class="mb-0">$accesoNames[ $user['acceso'] ];</h4>
-									<p>Nivel de Acceso $user['acceso'];</p>
+								<div class="card-body pb-0" id="user_accesos">
+									<h4 class="mb-0">...</h4>
+									<p>Nivel de Acceso ...</p>
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-warning">
 								<div class="card-body pb-0">
-									<h4 class="mb-0">count($campasData)</h4>
+									<h4 class="mb-0" id="campa_total1">...</h4>
 									<p>Campañas Participadas</p>
 								</div>
 							</div>
@@ -160,7 +80,7 @@ endforeach;
 						<div class="col-sm-6 col-lg-3">
 							<div class="card text-white bg-danger">
 								<div class="card-body pb-0">
-									<h4 class="mb-0">count($lugaresData)</h4>
+									<h4 class="mb-0" id="lugar_total1">...</h4>
 									<p>Lugares de Campaña</p>
 								</div>
 							</div>
@@ -197,11 +117,11 @@ endforeach;
 										<!-- Detalle por Campaña -->
 										<div class="col-sm-12 col-lg-4">
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<div class="callout callout-warning">
 														<small class="text-muted">CAMPAÑAS</small>
 														<br>
-														<strong class="h4"><?php echo ponepuntos( count($campasData) ); ?></strong>
+														<strong class="h4" id="campa_total2">...</strong>
 														<div class="chart-wrapper">
 															<canvas id="sparkline-chart-3" width="100" height="30"></canvas>
 														</div>
@@ -209,38 +129,8 @@ endforeach;
 												</div>
 											</div>
 											<hr class="mt-0">
-											<ul class="horizontal-bars type-2">
-												<!--<?php 
-												foreach ($campasData as $campa) :
-													$elNum = $campa['num'];
-													$elPor = round(100 * ($elNum / $clientesTotal) );
-													$activa = ' <span class="badge badge-success">ACTIVA</span>';
-													if ($campa['data']['activa'] == 0) :
-														$activa = ' <span class="badge badge-danger">INACTIVA</span>';
-													endif;
-													?>
-													<li>
-														<i class="icon-globe"></i>
-														<span class="title"><?php echo $campa['data']['nombre'].$activa; ?></span>
-														<span class="value"><?php echo $elNum; ?>
-															<span class="text-muted small">(<?php echo $elPor; ?>%)</span>
-														</span>
-														<div class="bars">
-															<div class="progress progress-xs">
-																<div 
-																	class="progress-bar bg-info" 
-																	role="progressbar" 
-																	style="width:<?php echo $elPor; ?>%" 
-																	aria-valuenow="<?php echo $elNum; ?>" 
-																	aria-valuemin="0" 
-																	aria-valuemax="<?php echo $clientesTotal; ?>">
-																</div>
-															</div>
-														</div>
-													</li>
-													<?php
-												endforeach;
-												?>-->
+											<ul class="horizontal-bars type-2" id="datos-campa">
+												<!-- Aqui va el contenido -->
 											</ul>
 										</div>
 										<!-- FIN Detalle por Campaña -->
@@ -248,11 +138,11 @@ endforeach;
 										<!-- Detalle por Region -->
 										<div class="col-sm-12 col-lg-4">
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<div class="callout callout-warning">
 														<small class="text-muted">CLIENTES POR REGIÓN DONDE VIVEN</small>
 														<br>
-														<strong class="h4"><?php echo ponePuntos($clientesTotal); ?> <small>clientes</small></strong>
+														<strong class="h4" id="region_total">... <small>clientes</small></strong>
 														<div class="chart-wrapper">
 															<canvas id="sparkline-chart-3" width="100" height="30"></canvas>
 														</div>
@@ -260,34 +150,8 @@ endforeach;
 												</div>
 											</div>
 											<hr class="mt-0">
-											<ul class="horizontal-bars type-2">
-												<!--<?php 
-												foreach ($regionData as $region) :
-													$elNum = $region['num'];
-													$elPor = round(100 * ($elNum / $clientesTotal) );
-													?>
-													<li>
-														<i class="icon-globe"></i>
-														<span class="title"><?php echo $region['nombre']; ?></span>
-														<span class="value"><?php echo $elNum; ?>
-															<span class="text-muted small">(<?php echo $elPor; ?>%)</span>
-														</span>
-														<div class="bars">
-															<div class="progress progress-xs">
-																<div 
-																	class="progress-bar bg-info" 
-																	role="progressbar" 
-																	style="width:<?php echo $elPor; ?>%" 
-																	aria-valuenow="<?php echo $elNum; ?>" 
-																	aria-valuemin="0" 
-																	aria-valuemax="<?php echo $clientesTotal; ?>">
-																</div>
-															</div>
-														</div>
-													</li>
-													<?php
-												endforeach;
-												?>-->
+											<ul class="horizontal-bars type-2" id="datos-region">
+												<!-- Aqui va el contenido -->
 											</ul>
 										</div>
 										<!-- FIN Detalle por Region -->
@@ -295,11 +159,11 @@ endforeach;
 										<!-- Detalle por Lugar -->
 										<div class="col-sm-12 col-lg-4">
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<div class="callout callout-warning">
 														<small class="text-muted">LUGARES DE CAMPAÑA</small>
 														<br>
-														<strong class="h4"><?php echo ponepuntos( count($lugaresData) ); ?></strong>
+														<strong class="h4" id="lugar_total2">...</strong>
 														<div class="chart-wrapper">
 															<canvas id="sparkline-chart-3" width="100" height="30"></canvas>
 														</div>
@@ -307,37 +171,8 @@ endforeach;
 												</div>
 											</div>
 											<hr class="mt-0">
-											<ul class="horizontal-bars type-2">
-												<!--<?php 
-												foreach ($lugaresData as $lugar) :
-													$elNum = $lugar['num'];
-													$elPor = round(100 * ($elNum / $clientesTotal) );
-													?>
-													<li>
-														<i class="icon-globe"></i>
-														<span class="title">
-															<?php echo $lugar['data']['nombre']; ?> | 
-															<small><?php echo $lugar['data']['ciudad'].', '.$regionNames[ $lugar['data']['region'] ]; ?></small>
-														</span>
-														<span class="value"><?php echo $elNum; ?>
-															<span class="text-muted small">(<?php echo $elPor; ?>%)</span>
-														</span>
-														<div class="bars">
-															<div class="progress progress-xs">
-																<div 
-																	class="progress-bar bg-info" 
-																	role="progressbar" 
-																	style="width:<?php echo $elPor; ?>%" 
-																	aria-valuenow="<?php echo $elNum; ?>" 
-																	aria-valuemin="0" 
-																	aria-valuemax="<?php echo $clientesTotal; ?>">
-																</div>
-															</div>
-														</div>
-													</li>
-													<?php
-												endforeach;
-												?>-->
+											<ul class="horizontal-bars type-2" id="datos-lugar">
+												<!-- Contenido Lugares -->
 											</ul>
 										</div>
 										<!-- FIN Detalle por Region -->
@@ -356,18 +191,24 @@ endforeach;
 		</main>
 	</div>
 
+	<!-- Footer -->
 	<footer class="app-footer">
 		<span>Powered by <a href="http://redon.cl" target="_blank">Redon©</a> 2018.</span>
 	</footer>
-
-	<!-- Bootstrap and necessary plugins -->
 	<script src="library/popper/popper.min.js"></script>
 	<script src="library/bootstrap/bootstrap.min.js"></script>
 	<script src="js/app.js"></script>
+	<!-- FIN Footer -->
+	
 	<script src="library/pace/pace.min.js"></script>
 	<script src="library/chart/Chart.min.js"></script>
 	<script src="js/comunes.js"></script>
 	<script>
+		// Accesos Usuario
+		if (window.elUsuario) {
+			$('#user_accesos').html('<h4 class="mb-0">'+ accesoNames[ window.elUsuario.acceso ] +'</h4><p>Nivel de Acceso '+ window.elUsuario.acceso +'</p>');
+		}
+
 		// Carga Datos
 		var datosArray = new Array();
 		var lasFechas = new Array();
@@ -378,50 +219,33 @@ endforeach;
 		function cargaDatosAsync(num) {
 			if (window.elUsuario) {
 				
-				var datosCargados = JSON.parse( window.localStorage.getItem("datos_home") );
-				if (datosCargados) {
-					$('#carga').html(' [ DATOS CARGADOS ] ');
-					datosArray = datosCargados.datos;
-					totalMax = datosCargados.total;
-					cuentaDatos();
-				} else {
+				// Si no hay conexion a internet
+				if (window.internet) {
 					$('#carga').html(' [ Cargando Datos... ] ');
 					$.ajax({
 						url	 : window.dataURL + 'datosHome.php',
 						type : 'GET',
 						data : {
 							usuario : window.elUsuario.email,
-							password: window.elUsuario.pass,
-							pag		: num
+							password: window.elUsuario.pass
 						}
 					}).done(function(txt) {
 						
 						// Si carga Datos
-						if (txt.substr(0,5) != 'Error' && txt != 'FIN') {
-							
-							// Guarda Datos
-							var datosA = txt.split('<xxx>');
-							for (var a = 0; a < datosA.length; a++) {
-								var datosB = datosA[a].split('<xx>');
-								var newDato = new Array();
+						if (txt.substr(0,5) != 'Error') {
+							var datosA = txt.split('<-xx_xx->');
+							for (var a = 1; a < datosA.length; a++) {
+								var datosB = datosA[a].split('<-x_x->');
+								var newDato = new Object();
 								for (var b = 0; b < datosB.length; b++) {
-									var datosC = datosB[b].split('<x>');
+									var datosC = datosB[b].split('<-x->');
 									newDato[ datosC[0] ] = datosC[1];
 								}
 								if (fechaIni == '') {
-									fechaIni = newDato['fecha'];
-									lasFechas = calculaFechas(fechaIni, fechaFin);
+									fechaIni = newDato.fecha.substr(0,10);
 								}
 								datosArray.push(newDato);
 							}
-							
-							// Reinicia Ciclo
-							setTimeout(function() {
-								cargaDatosAsync(num + 1);
-							}, 500);
-							
-						// Termina de cargar datos
-						} else if (txt == 'FIN') {
 							$('#carga').html(' [ DATOS CARGADOS ] ');
 							totalMax = datosArray.length;
 							var losDatosSave = {
@@ -436,6 +260,20 @@ endforeach;
 							alert(txt);
 						}
 					});
+
+				// Si Hay conexión a internet
+				} else {
+					var datosCargados = JSON.parse( window.localStorage.getItem("datos_home") );
+
+					if (datosCargados) {
+						$('#carga').html(' [ DATOS DESDE EL CACHE ] ');
+						datosArray = datosCargados.datos;
+						totalMax = datosCargados.total;
+						fechaIni = datosArray[0].fecha.substr(0,10);
+						cuentaDatos();
+					} else {
+						alert('No hay datos guardados.');
+					}
 				}
 			}
 		}
@@ -443,7 +281,14 @@ endforeach;
 		
 		// Cuenta Datos
 		var maxDay = 0;
+		var clienTotal = 0;
+		var campaUsuario = new Array();
+		var lugarUsuario = new Array();
+		var regioUsuario = new Array();
 		function cuentaDatos() {
+			lasFechas = calculaFechas(fechaIni, fechaFin);
+			clienTotal = datosArray.length;
+			$('#clien_total').html( clienTotal );
 			
 			// Crea Array para Datos del Grafico
 			var datosGraf = new Array();
@@ -455,18 +300,159 @@ endforeach;
 			for (var s = 0; s < datosArray.length; s++) {
 				
 				// Filtros para Gráfico
-				var elFecha = datosArray[s]['fecha'].substr(0,10);
+				var elFecha = datosArray[s].fecha.substr(0,10);
 				datosGraf[ elFecha ]++;
 				if (datosGraf[ elFecha ] > maxDay) {
 					maxDay = datosGraf[ elFecha ];
 				}
+
+				// Filtra datos Lugares
+				var lugarID = datosArray[s].lugar_id;
+				var lugarPos = lugarUsuario.indexOf(lugarID);
+				if (lugarPos < 0) {
+					lugarUsuario.push({
+						id		: lugarID,
+						name	: lugarNames[lugarID].nombre,
+						region	: lugarNames[lugarID].region,
+						ciudad	: lugarNames[lugarID].ciudad,
+						total	: 1
+					});
+				} else {
+					lugarUsuario[lugarPos].total++;
+				}
+
+				// Filtra datos Campañas
+				var campaID = datosArray[s].campa_id;
+				var campaPos = campaUsuario.indexOf(campaID);
+				if (campaPos < 0) {
+					campaUsuario.push({
+						id		: campaID,
+						name	: campaNames[campaID].nombre,
+						activa	: campaNames[campaID].activa,
+						total	: 1
+					});
+				} else {
+					campaUsuario[campaID].total++;
+				}
+
+				// Filtra datos Regiones
+				var regionID = datosArray[s].region;
+				var regionPos = regioUsuario.indexOf(regionID);
+				if (regionPos < 0) {
+					regioUsuario.push({
+						id		: regionID,
+						name	: regionNames[regionID],
+						total	: 1
+					});
+				} else {
+					regioUsuario[regionID].total++;
+				}
 			}
+
+			// Muestra Datos por Campañas
+			var campaTotal = campaUsuario.length;
+			$('#campas_total1').html( campaTotal );
+			$('#campas_total2').html( campaTotal );
+			var campaInfo = '';
+			for (var c = 0; c < campaTotal; c++) {
+				var elNumC = campaUsuario[c].total;
+				var elPorC = Math.round( 100 * (elNumC / campaTotal) );
+				var contActiva = ' <span class="badge badge-success">ACTIVA</span>';
+				if (campaUsuario[c].activa == 0) {
+					contActiva = ' <span class="badge badge-danger">INACTIVA</span>';
+				}
+				campaInfo += '<li>'+
+					'<i class="icon-globe"></i>'+
+					'<span class="title">'+ campaUsuario[c].name + contActiva +'</span>'+
+					'<span class="value">'+ elNumC +
+						' <span class="text-muted small">('+ elPorC +'%)</span>'+
+					'</span>'+
+					'<div class="bars">'+
+						'<div class="progress progress-xs">'+
+							'<div '+
+								'class="progress-bar bg-info" '+
+								'role="progressbar" '+
+								'style="width:'+ elPorC +'%" '+
+								'aria-valuenow="'+ elNumC +'" '+
+								'aria-valuemin="0" '+
+								'aria-valuemax="'+ clienTotal +'">'+
+							'</div>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+			}
+			$('#datos-campa').html(campaInfo);
+
+			// Muestra Datos por Lugar
+			var lugarTotal = lugarUsuario.length;
+			$('#lugar_total1').html( lugarTotal );
+			$('#lugar_total2').html( lugarTotal );
+			var lugarInfo = '';
+			for (var l = 0; l < lugarTotal; l++) {
+				var elNumL = lugarUsuario[l].total;
+				var elPorL = Math.round( 100 * (elNumL / campaTotal) );
+				lugarInfo += '<li>'+
+					'<i class="icon-globe"></i>'+
+					'<span class="title">'+ 
+						lugarUsuario[l].name +' | '+
+						'<small>'+ lugarUsuario[l].ciudad +', '+ regionNames[ lugarUsuario[l].region ] +'</small>'+
+					'</span>'+
+					'<span class="value">'+ elNumL +
+						' <span class="text-muted small">('+ elPorL +'%)</span>'+
+					'</span>'+
+					'<div class="bars">'+
+						'<div class="progress progress-xs">'+
+							'<div '+
+								'class="progress-bar bg-info" '+
+								'role="progressbar" '+
+								'style="width:'+ elPorL +'%" '+
+								'aria-valuenow="'+ elNumL +'" '+
+								'aria-valuemin="0" '+
+								'aria-valuemax="'+ clienTotal +'">'+
+							'</div>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+			}
+			$('#datos-lugar').html(lugarInfo);
+
+			// Muestra Datos por Region
+			var regioTotal = regioUsuario.length;
+			$('#region_total').html( clienTotal +' <small>clientes</small>');
+			var regioInfo = '';
+			for (var r = 0; r < regioTotal; r++) {
+				var elNumR = regioUsuario[r].total;
+				var elPorR = Math.round( 100 * (elNumR / campaTotal) );
+				regioInfo += '<li>'+
+					'<i class="icon-globe"></i>'+
+					'<span class="title">'+ 
+						regioUsuario[r].name +
+					'</span>'+
+					'<span class="value">'+ elNumR +
+						' <span class="text-muted small">('+ elPorR +'%)</span>'+
+					'</span>'+
+					'<div class="bars">'+
+						'<div class="progress progress-xs">'+
+							'<div '+
+								'class="progress-bar bg-info" '+
+								'role="progressbar" '+
+								'style="width:'+ elPorR +'%" '+
+								'aria-valuenow="'+ elNumR +'" '+
+								'aria-valuemin="0" '+
+								'aria-valuemax="'+ clienTotal +'">'+
+							'</div>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+			}
+			$('#datos-region').html(regioInfo);
 			
 			// Limpia los Datos
 			var datosFinGraf = new Array();
 			for (key in datosGraf) {
 				datosFinGraf.push(datosGraf[key]);
 			}
+			datosGraf = false;
 			crearGrafico(datosFinGraf);
 		}
 		
@@ -505,7 +491,6 @@ endforeach;
 					}
 				]
 			};
-		
 			var grafiOpcion = {
 				maintainAspectRatio	: false,
 				legend				: { display : false },
@@ -542,8 +527,11 @@ endforeach;
 		}
 
 
-		// Si hay datos guardados de un usuario
-		cargaDatosAsync(1);
+		// Ejecuta al cargarse todo
+		cargaInicial('users');
+		function ejecutaInicio() {
+			cargaDatosAsync(1);
+		}
 	</script>
 </body>
 </html>
