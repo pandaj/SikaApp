@@ -54,11 +54,15 @@ function cargaInicial(indica) {
 						var newDato = new Object();
 						for (var b = 0; b < datosB.length; b++) {
 							var datosC = datosB[b].split('<-x->');
-							newDato[ datosC[0] ] = datosC[1];
+							if (datosC[0] == 'user_id' || datosC[0] == 'lugar_id' || datosC[0] == 'campa_id') {
+								newDato[ datosC[0] ] = parseInt(datosC[1]);
+							} else {
+								newDato[ datosC[0] ] = datosC[1];
+							}
 						}
-						if (indica == 'users')	usersNames.push(newDato);
-						if (indica == 'lugar')	lugarNames.push(newDato);
-						if (indica == 'campa')	campaNames.push(newDato);
+						if (indica == 'users')	usersNames[ newDato.user_id ] = newDato;
+						if (indica == 'lugar')	lugarNames[ newDato.lugar_id ] = newDato;
+						if (indica == 'campa')	campaNames[ newDato.campa_id ] = newDato;
 					}
 
 					if (indica == 'campa') {
@@ -97,6 +101,20 @@ function cargaInicial(indica) {
 			}
 		}
 	}
+}
+
+// PonePuntos
+function ponePuntos(num) {
+	var finNum = ''.num;
+	var len = finNum.length;
+	if (len > 3 && len <= 6) {
+		finNum = finNum.substr(0, (len - 3)) +'.'+ finNum.substr((len - 3), 3);
+	} else if (len > 6 && len <= 9) {
+		finNum = finNum.substr(0, (len - 6)) +'.'+ finNum.substr((len - 6), 3) +'.'+ finNum.substr((len - 3), 3);
+	} else if (len > 9 && len <= 12) {
+		finNum = finNum.substr(0, (len - 9)) +'.'+ finNum.substr((len - 9), 3) +'.'+ finNum.substr((len - 6), 3) +'.'+ finNum.substr(finNum, (len - 3), 3);
+	}
+	return finNum;
 }
 
 // convert Hex to RGBA

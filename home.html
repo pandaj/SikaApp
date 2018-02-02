@@ -94,7 +94,7 @@
 							<div class="row">
 								<div class="col-sm-5">
 									<h4 class="card-title mb-0">Clientes Registrados</h4>
-									<div class="small text-muted" id="carga"></div>
+									<div class="small text-muted" id="carga">...</div>
 								</div>
 							</div>
 							<div class="chart-wrapper" style="height:300px; margin-top:40px;">
@@ -312,7 +312,7 @@
 				if (lugarPos < 0) {
 					lugarUsuario.push({
 						id		: lugarID,
-						name	: lugarNames[lugarID].nombre,
+						nombre	: lugarNames[lugarID].nombre,
 						region	: lugarNames[lugarID].region,
 						ciudad	: lugarNames[lugarID].ciudad,
 						total	: 1
@@ -327,7 +327,7 @@
 				if (campaPos < 0) {
 					campaUsuario.push({
 						id		: campaID,
-						name	: campaNames[campaID].nombre,
+						nombre	: campaNames[campaID].nombre,
 						activa	: campaNames[campaID].activa,
 						total	: 1
 					});
@@ -341,7 +341,7 @@
 				if (regionPos < 0) {
 					regioUsuario.push({
 						id		: regionID,
-						name	: regionNames[regionID],
+						nombre	: regionNames[regionID],
 						total	: 1
 					});
 				} else {
@@ -351,19 +351,19 @@
 
 			// Muestra Datos por Campañas
 			var campaTotal = campaUsuario.length;
-			$('#campas_total1').html( campaTotal );
-			$('#campas_total2').html( campaTotal );
+			$('#campa_total1').html( campaTotal );
+			$('#campa_total2').html( campaTotal );
 			var campaInfo = '';
 			for (var c = 0; c < campaTotal; c++) {
 				var elNumC = campaUsuario[c].total;
-				var elPorC = Math.round( 100 * (elNumC / campaTotal) );
+				var elPorC = Math.round( 100 * (elNumC / clienTotal) );
 				var contActiva = ' <span class="badge badge-success">ACTIVA</span>';
 				if (campaUsuario[c].activa == 0) {
 					contActiva = ' <span class="badge badge-danger">INACTIVA</span>';
 				}
 				campaInfo += '<li>'+
 					'<i class="icon-globe"></i>'+
-					'<span class="title">'+ campaUsuario[c].name + contActiva +'</span>'+
+					'<span class="title">'+ campaUsuario[c].nombre + contActiva +'</span>'+
 					'<span class="value">'+ elNumC +
 						' <span class="text-muted small">('+ elPorC +'%)</span>'+
 					'</span>'+
@@ -390,11 +390,11 @@
 			var lugarInfo = '';
 			for (var l = 0; l < lugarTotal; l++) {
 				var elNumL = lugarUsuario[l].total;
-				var elPorL = Math.round( 100 * (elNumL / campaTotal) );
+				var elPorL = Math.round( 100 * (elNumL / clienTotal) );
 				lugarInfo += '<li>'+
 					'<i class="icon-globe"></i>'+
 					'<span class="title">'+ 
-						lugarUsuario[l].name +' | '+
+						lugarUsuario[l].nombre +' | '+
 						'<small>'+ lugarUsuario[l].ciudad +', '+ regionNames[ lugarUsuario[l].region ] +'</small>'+
 					'</span>'+
 					'<span class="value">'+ elNumL +
@@ -422,11 +422,11 @@
 			var regioInfo = '';
 			for (var r = 0; r < regioTotal; r++) {
 				var elNumR = regioUsuario[r].total;
-				var elPorR = Math.round( 100 * (elNumR / campaTotal) );
+				var elPorR = Math.round( 100 * (elNumR / clienTotal) );
 				regioInfo += '<li>'+
 					'<i class="icon-globe"></i>'+
 					'<span class="title">'+ 
-						regioUsuario[r].name +
+						regioUsuario[r].nombre +
 					'</span>'+
 					'<span class="value">'+ elNumR +
 						' <span class="text-muted small">('+ elPorR +'%)</span>'+

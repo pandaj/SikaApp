@@ -1,32 +1,3 @@
-<!--<?php
-include 'php__header.php';
-
-
-//Valida Login
-global $login,$get,$extra,$user;
-if (!$login) :
-	sleep(3);
-	devuelveHome();
-endif;
-
-
-// Carga Base de Datos
-$configDB = require_once 'config/db.php';
-$conectDB = Zend_Db::factory('Mysqli', $configDB);
-Zend_Db_Table_Abstract::setDefaultAdapter($conectDB);
-
-
-// Carga Datos de Campañas
-$tablaCampa = new Zend_Db_Table('campas');
-$queryCampa = $tablaCampa->select()->where('activa = ?', 1);
-$datosCampa = $tablaCampa->fetchAll($queryCampa);
-
-
-// Carga Datos de Lugares
-$tablaLugar = new Zend_Db_Table('lugares');
-$queryLugar = $tablaLugar->select();
-$datosLugar = $tablaLugar->fetchAll($queryLugar);
-?>-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,17 +46,17 @@ $datosLugar = $tablaLugar->fetchAll($queryLugar);
 						<h1>Asocia una Campaña</h1>
 						<p class="text-muted">Selecciona una campaña para asociarla al registro de clientes.</p>
 						<div class="alert alert-danger" style="display:none;">
-							<strong>Danger!</strong>
+							<strong>...</strong>
 						</div>
 						<div class="input-group mb-3">
 							<span class="input-group-addon"><i class="icon-badge"></i></span>
 							<select class="form-control" name="campa">
 								<option value="">[ Elige Campaña ]</option>
-								<?php 
+								<!--<?php 
 								foreach ($datosCampa as $campa) :
 									echo '<option value="'.$campa['campa_id'].'">'.$campa['nombre'].'</option>';
 								endforeach;
-								?>
+								?>-->
 							</select>
 						</div>
 						<div class="input-group mb-3">
@@ -218,7 +189,7 @@ $datosLugar = $tablaLugar->fetchAll($queryLugar);
 	<!-- Script Propios -->
 	<script src="js/comunasChile.js"></script>
 	<script src="js/validaDatos.js"></script>
-	<script src="js/julioForm.js"></script>
+	<script src="js/julioFormApp.js"></script>
 	<script>
 		var lasKeys = new Array('0','1','2','3','4','5','6','7','8','9','+');
 	
@@ -284,7 +255,7 @@ $datosLugar = $tablaLugar->fetchAll($queryLugar);
 		
 		// Muestra Lugares
 		var losLugares = new Array();
-		<?php 
+		/*<?php 
 		$comunas = array();
 		foreach ($datosLugar as $lugar) :
 			if (!in_array($lugar['ciudad'], $comunas) ) :
@@ -293,7 +264,7 @@ $datosLugar = $tablaLugar->fetchAll($queryLugar);
 			endif;
 			echo 'losLugares["'.$lugar['ciudad'].'"].push({nombre:"'.$lugar['nombre'].'",id:'.$lugar['lugar_id'].'}); ';
 		endforeach;
-		?>
+		?>*/
 		function cambiaLugares(comuna, elDiv) {
 			if (comuna != '') {
 				$(elDiv).html('<option value="">[ Lugar de Campaña ]</option>');
@@ -361,104 +332,115 @@ $datosLugar = $tablaLugar->fetchAll($queryLugar);
 		}
 		
 		function registraCliente() {
-			if (activaTodo) {
-				var losDatos = new Array(
-					{
-						input		: $('select[name=campa]'),
-						tipo		: '',
-						minText		: 1,
-						aleCompleta	: 'Error #001. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
-					},{
-						input		: $('select[name=camp_region]'),
-						tipo		: '',
-						minText		: 2,
-						aleCompleta	: 'Error #002. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
-					},{
-						input		: $('select[name=camp_ciudad]'),
-						tipo		: '',
-						minText		: 2,
-						aleCompleta	: 'Error #003. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
-					},{
-						input		: $('select[name=camp_lugar]'),
-						tipo		: '',
-						minText		: 1,
-						aleCompleta	: 'Error #003. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
-					},{
-						input		: $('input[name=new_lugar]'),
-						tipo		: '',
-						minText		: 0
-					},{
-						input		: $('input[name=nombre]'),
-						tipo		: 'nombre',
-						minText		: 2,
-						aleCompleta	: 'Debes ingresar el nombre del cliente.',
-						aleValida	: 'Debes ingresar un nombre válido, sin símbolos extraños ni números.'
-					},{
-						input		: $('input[name=apellido]'),
-						tipo		: 'nombre',
-						minText		: 2,
-						aleCompleta	: 'Debes ingresar los apellido del cliente.',
-						aleValida	: 'Debes ingresar unos apellido válidos, sin símbolos extraños ni números.'
-					},{
-						input		: $('input[name=email]'),
-						tipo		: 'email',
-						minText		: 5,
-						aleCompleta	: 'Debes ingresar el email del cliente.',
-						aleValida	: 'Debes ingresar un email válido, sin tildes, espacios ni símbolos extraños.'
-					},{
-						input		: $('input[name=fono]'),
-						tipo		: 'fono',
-						minText		: 8,
-						aleCompleta	: 'Debes ingresar un teléfono de al menos 8 dígitos.',
-						aleValida	: 'Debes ingresar un teléfono válido, sin letras ni símbolos extraños.'
-					},{
-						input		: $('input[name=empresa]'),
-						tipo		: '',
-						minText		: 0
-					},{
-						input		: $('select[name=actividad]'),
-						tipo		: '',
-						minText		: 2,
-						aleCompleta	: 'Debes indicar la actividad del cliente.'
-					},{
-						input		: $('select[name=user_region]'),
-						tipo		: '',
-						minText		: 2,
-						aleCompleta	: 'Debes indicar la región del cliente.'
-					},{
-						input		: $('select[name=user_ciudad]'),
-						tipo		: '',
-						minText		: 2,
-						aleCompleta	: 'Debes indicar la ciudad o comuna deñ cliente.'
-					}
-				);
-				
-				validaJulioform(losDatos, 'adminSaveCliente.php', function(txt) {
-					if (txt == 'Exito') {
-						activaTodo = false;
-						$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
-						if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
-							$('#formbox-2 .alert').removeClass('alert-danger');
-							$('#formbox-2 .alert').addClass('alert-success');
+			if (window.elUsuario) {
+				if (activaTodo) {
+					var losDatos = new Array(
+						{
+							input		: $('select[name=campa]'),
+							tipo		: '',
+							minText		: 1,
+							aleCompleta	: 'Error #001. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
+						},{
+							input		: $('select[name=camp_region]'),
+							tipo		: '',
+							minText		: 2,
+							aleCompleta	: 'Error #002. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
+						},{
+							input		: $('select[name=camp_ciudad]'),
+							tipo		: '',
+							minText		: 2,
+							aleCompleta	: 'Error #003. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
+						},{
+							input		: $('select[name=camp_lugar]'),
+							tipo		: '',
+							minText		: 1,
+							aleCompleta	: 'Error #003. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
+						},{
+							input		: $('input[name=new_lugar]'),
+							tipo		: '',
+							minText		: 0
+						},{
+							input		: $('input[name=nombre]'),
+							tipo		: 'nombre',
+							minText		: 2,
+							aleCompleta	: 'Debes ingresar el nombre del cliente.',
+							aleValida	: 'Debes ingresar un nombre válido, sin símbolos extraños ni números.'
+						},{
+							input		: $('input[name=apellido]'),
+							tipo		: 'nombre',
+							minText		: 2,
+							aleCompleta	: 'Debes ingresar los apellido del cliente.',
+							aleValida	: 'Debes ingresar unos apellido válidos, sin símbolos extraños ni números.'
+						},{
+							input		: $('input[name=email]'),
+							tipo		: 'email',
+							minText		: 5,
+							aleCompleta	: 'Debes ingresar el email del cliente.',
+							aleValida	: 'Debes ingresar un email válido, sin tildes, espacios ni símbolos extraños.'
+						},{
+							input		: $('input[name=fono]'),
+							tipo		: 'fono',
+							minText		: 8,
+							aleCompleta	: 'Debes ingresar un teléfono de al menos 8 dígitos.',
+							aleValida	: 'Debes ingresar un teléfono válido, sin letras ni símbolos extraños.'
+						},{
+							input		: $('input[name=empresa]'),
+							tipo		: '',
+							minText		: 0
+						},{
+							input		: $('select[name=actividad]'),
+							tipo		: '',
+							minText		: 2,
+							aleCompleta	: 'Debes indicar la actividad del cliente.'
+						},{
+							input		: $('select[name=user_region]'),
+							tipo		: '',
+							minText		: 2,
+							aleCompleta	: 'Debes indicar la región del cliente.'
+						},{
+							input		: $('select[name=user_ciudad]'),
+							tipo		: '',
+							minText		: 2,
+							aleCompleta	: 'Debes indicar la ciudad o comuna deñ cliente.'
 						}
-						$('#formbox-2 .alert').fadeIn(300);
-						$('#formbox-2 input').each(function() {
-							$(this).val('');
-						});
-						$('#formbox-2 select').each(function() {
-							$(this).val('');
-							$(this).trigger('change');
-						});
-						setTimeout(function() {
-							$('#formbox-2 .alert').fadeOut(300);
-						}, 1300);
-						setTimeout(function() {
-							activaTodo = true;
-						}, 1600);
-					} else {
-						alertas(txt);
-					}
-				});
+					);
+					
+					validaJulioform(losDatos, function(datos) {
+
+						// Si hay Internet
+						if (window.internet) {
+							console.log(datos);
+							/*
+							if (txt == 'Exito') {
+								activaTodo = false;
+								$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
+								if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
+									$('#formbox-2 .alert').removeClass('alert-danger');
+									$('#formbox-2 .alert').addClass('alert-success');
+								}
+								$('#formbox-2 .alert').fadeIn(300);
+								$('#formbox-2 input').each(function() {
+									$(this).val('');
+								});
+								$('#formbox-2 select').each(function() {
+									$(this).val('');
+									$(this).trigger('change');
+								});
+								setTimeout(function() {
+									$('#formbox-2 .alert').fadeOut(300);
+								}, 1300);
+								setTimeout(function() {
+									activaTodo = true;
+								}, 1600);
+							} else {
+								alertas(txt);
+							}
+							*/
+						} else {
+
+						}
+					});
+				}
 			}
 		}
 	</script>
