@@ -40,8 +40,10 @@
 
 		<!-- Main content -->
 		<main class="main row justify-content-center">
-			<div class="col-md-6">
-				<div class="card mx-4">
+			<div class="col-md-10">
+
+				<!-- FORM -->
+				<div class="card mx-4" id="el-form" style="display: none;;">
 					<div id="formbox-1" class="card-body p-4">
 						<h1>Asocia una Campaña</h1>
 						<p class="text-muted">Selecciona una campaña para asociarla al registro de clientes.</p>
@@ -52,11 +54,6 @@
 							<span class="input-group-addon"><i class="icon-badge"></i></span>
 							<select class="form-control" name="campa">
 								<option value="">[ Elige Campaña ]</option>
-								<!--<?php 
-								foreach ($datosCampa as $campa) :
-									echo '<option value="'.$campa['campa_id'].'">'.$campa['nombre'].'</option>';
-								endforeach;
-								?>-->
 							</select>
 						</div>
 						<div class="input-group mb-3">
@@ -173,6 +170,8 @@
 						<button type="button" class="btn btn-block btn-success" onClick="registraCliente();">Registrar Cliente</button>
 					</div>
 				</div>
+				<!-- FIN FORM -->
+
 			</div>
 		</div>
 	</div>
@@ -190,38 +189,67 @@
 	<script src="js/comunasChile.js"></script>
 	<script src="js/validaDatos.js"></script>
 	<script src="js/julioFormApp.js"></script>
+	<script src="js/comunes.js"></script>
 	<script>
-		var lasKeys = new Array('0','1','2','3','4','5','6','7','8','9','+');
-	
-		$(document).ready(function(e) {
-			$('select[name=camp_region]').change(function() {
-				cambioRegion( $(this).val(), 'select[name=camp_ciudad]');
-			});
-			$('select[name=user_region]').change(function() {
-				cambioRegion( $(this).val(), 'select[name=user_ciudad]');
-			});
-			$('select[name=camp_ciudad]').change(function() {
-				cambiaLugares( $(this).val(), 'select[name=camp_lugar]');
-			});
-			$('select[name=camp_lugar]').change(function() {
-				if ($(this).val() == 'new_place') {
-					$(this).animate({opacity:0}, 500);
-					$(this).attr('disabled', 'disabled');
-					setTimeout(function() {
-						$('select[name=camp_lugar]').animate({opacity:1}, 500);
-						$('input[name=new_lugar]').fadeIn(500);
-					}, 500);
+		var activaTodo = false;
+		var losLugares = new Array();
+		cargaInicial('users');
+		function ejecutaInicio() {
+
+			// Carga Campañas
+			for (Ckey in campaNames) {
+				if (campaNames[Ckey] != null) {
+					if (campaNames[Ckey].activa == 1) {
+						$('select[name=campa]').append( '<option value="'+ Ckey +'">'+ campaNames[Ckey].nombre +'</option>' );
+					}
 				}
-			});
-			
-			$('input[name=fono]').keypress(function(evt) {
-				console.log(evt.key);
-				if (lasKeys.indexOf(evt.key) < 0) {
-					return false;
-				} else if ( $('input[name=fono]').val().indexOf('+') >= 0 && evt.key == '+') {
-					return false;
+			}
+
+			// Carga Lugares
+			for (Lkey in lugarNames) {
+				if (lugarNames[Lkey] != null) {
+					var laCiudad = lugarNames[Lkey].ciudad;
+					if (typeof losLugares[ laCiudad ] === "undefined") {
+						losLugares[ laCiudad ] = new Array();
+					}
+					losLugares[ laCiudad ].push({
+						nombre	: lugarNames[Lkey].nombre,
+						id		: Lkey
+					});
 				}
-			});
+			}
+
+			activaTodo = true;
+			$('#el-form').fadeIn(500);
+		}
+
+
+		$('select[name=camp_region]').change(function() {
+			cambioRegion( $(this).val(), 'select[name=camp_ciudad]');
+		});
+		$('select[name=user_region]').change(function() {
+			cambioRegion( $(this).val(), 'select[name=user_ciudad]');
+		});
+		$('select[name=camp_ciudad]').change(function() {
+			cambiaLugares( $(this).val(), 'select[name=camp_lugar]');
+		});
+		$('select[name=camp_lugar]').change(function() {
+			if ($(this).val() == 'new_place') {
+				$(this).animate({opacity:0}, 500);
+				$(this).attr('disabled', 'disabled');
+				setTimeout(function() {
+					$('select[name=camp_lugar]').animate({opacity:1}, 500);
+					$('input[name=new_lugar]').fadeIn(500);
+				}, 500);
+			}
+		});
+		var lasFonoKeys = new Array('0','1','2','3','4','5','6','7','8','9','+');	
+		$('input[name=fono]').keypress(function(evt) {
+			if (lasFonoKeys.indexOf(evt.key) < 0) {
+				return false;
+			} else if ( $('input[name=fono]').val().indexOf('+') >= 0 && evt.key == '+') {
+				return false;
+			}
 		});
 
 		// Cambia Region / Comuna
@@ -252,19 +280,8 @@
 				}
 			}
 		}
-		
-		// Muestra Lugares
-		var losLugares = new Array();
-		/*<?php 
-		$comunas = array();
-		foreach ($datosLugar as $lugar) :
-			if (!in_array($lugar['ciudad'], $comunas) ) :
-				echo 'losLugares["'.$lugar['ciudad'].'"] = new Array(); ';
-				$comunas[] = $lugar['ciudad'];
-			endif;
-			echo 'losLugares["'.$lugar['ciudad'].'"].push({nombre:"'.$lugar['nombre'].'",id:'.$lugar['lugar_id'].'}); ';
-		endforeach;
-		?>*/
+
+		// Cambia Lugares
 		function cambiaLugares(comuna, elDiv) {
 			if (comuna != '') {
 				$(elDiv).html('<option value="">[ Lugar de Campaña ]</option>');
@@ -289,8 +306,6 @@
 				}
 			}
 		}
-		
-		var activaTodo = true;
 		function asociarCamp() {
 			if (activaTodo) {
 				if ( $('select[name=campa]').val() != '' && $('select[name=camp_region]').val() != '' && $('select[name=camp_ciudad]').val() != '' && $('select[name=camp_lugar]').val() != '') {
@@ -409,35 +424,49 @@
 
 						// Si hay Internet
 						if (window.internet) {
-							console.log(datos);
-							/*
-							if (txt == 'Exito') {
-								activaTodo = false;
-								$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
-								if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
-									$('#formbox-2 .alert').removeClass('alert-danger');
-									$('#formbox-2 .alert').addClass('alert-success');
+							activaTodo = false;
+							datos.usuario = window.elUsuario.email;
+							datos.password = window.elUsuario.pass;
+							$.ajax({
+								url	 : window.dataURL + 'saveCliente.php',
+								type : 'GET',
+								data : datos
+							}).done(function(txt) {
+								if (txt == 'Exito') {
+									$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
+									if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
+										$('#formbox-2 .alert').removeClass('alert-danger');
+										$('#formbox-2 .alert').addClass('alert-success');
+									}
+									$('#formbox-2 .alert').fadeIn(300);
+									$('#formbox-2 input').each(function() {
+										$(this).val('');
+									});
+									$('#formbox-2 select').each(function() {
+										$(this).val('');
+										$(this).trigger('change');
+									});
+									setTimeout(function() {
+										$('#formbox-2 .alert').fadeOut(300);
+									}, 1300);
+									setTimeout(function() {
+										activaTodo = true;
+									}, 1600);
+								} else {
+									alertas(txt);
 								}
-								$('#formbox-2 .alert').fadeIn(300);
-								$('#formbox-2 input').each(function() {
-									$(this).val('');
-								});
-								$('#formbox-2 select').each(function() {
-									$(this).val('');
-									$(this).trigger('change');
-								});
-								setTimeout(function() {
-									$('#formbox-2 .alert').fadeOut(300);
-								}, 1300);
-								setTimeout(function() {
-									activaTodo = true;
-								}, 1600);
-							} else {
-								alertas(txt);
-							}
-							*/
+							});
+
+						// Si no hay internet
 						} else {
 
+							// Revisa si ya habian datos guardados
+							var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
+							if (!datosClientes) {
+								datosClientes = new Array();
+							}
+							datosClientes.push(datos);
+							window.localStorage.setItem("registros", JSON.stringify(datosClientes) );
 						}
 					});
 				}

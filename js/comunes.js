@@ -54,7 +54,7 @@ function cargaInicial(indica) {
 						var newDato = new Object();
 						for (var b = 0; b < datosB.length; b++) {
 							var datosC = datosB[b].split('<-x->');
-							if (datosC[0] == 'user_id' || datosC[0] == 'lugar_id' || datosC[0] == 'campa_id') {
+							if (datosC[0] == 'user_id' || datosC[0] == 'lugar_id' || datosC[0] == 'campa_id' || datosC[0] == 'activa') {
 								newDato[ datosC[0] ] = parseInt(datosC[1]);
 							} else {
 								newDato[ datosC[0] ] = datosC[1];

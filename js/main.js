@@ -3,6 +3,7 @@ window.dataURL = 'http://appsredon.cl/apps/sikaform/connect/';
 
 
 // Detecta si hay conexion a internet o no
+window.internet = false;
 function detectaConexion() {
 	var networkState = navigator.network.connection.type;
 	var states = new Array();
@@ -15,13 +16,16 @@ function detectaConexion() {
 	states[Connection.NONE]     = 'No network';
 	var conexion = states[networkState];
 	if (conexion == 'No network') {
-		return false;
+		window.internet = false;
 	} else {
-		return true;
+		window.internet = true;
 	}
+	// Se reinicia cada 15 segundos
+	setTimeout(function() {
+		detectaConexion();
+	}, 15 * 1000);
 }
-//window.internet = detectaConexion();
-window.internet = true;
+detectaConexion();
 
 
 // Valida Login
@@ -58,6 +62,18 @@ function loginRedirige(pag, num) {
 function loadMenu() {
 	// Si hay datos guardados de un usuario
 	if (window.elUsuario) {
+
+		// Revisa si hay datos pendientes por subir
+		var subeDatosHTML = '';
+		var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
+		if (datosClientes && window.internet) {
+			subeDatosHTML = '<li class="nav-item" id="subedata">'+
+				'<a class="nav-link" href="javascript: subeDatosPendientes();">'+
+					'<i class="icon-star"></i> SUBIR REGISTROS PENDIENTES'+
+				'</a>'+
+			'</li>';
+		}
+
 		$('#side-menu').html(
 			'<nav class="sidebar-nav">'+
 				'<ul class="nav">'+
@@ -71,6 +87,7 @@ function loadMenu() {
 							'<i class="icon-plus"></i> Registrar Cliente'+
 						'</a>'+
 					'</li>'+
+					subeDatosHTML+
 					'<li class="nav-item acceso3">'+
 						'<a id="btn-3" class="nav-link" href="estadisticas.html">'+
 							'<i class="icon-chart"></i> Estadisticas Generales'+
@@ -99,7 +116,7 @@ function loadMenu() {
 							'<i class="icon-list"></i> Clientes por Usuario'+
 						'</a>'+
 					'</li>'+
-					'<li class="nav-title acceso5">'+
+					/*'<li class="nav-title acceso5">'+
 						'Administración'+
 					'</li>'+
 					'<li class="nav-item acceso7">'+
@@ -111,7 +128,7 @@ function loadMenu() {
 						'<a id="btn-9" class="nav-link" href="edit_campa.html">'+
 							'<i class="icon-settings"></i> Admin. Campañas'+
 						'</a>'+
-					'</li>'+
+					'</li>'+*/
 				'</ul>'+
 			'</nav>'+
 			'<button class="sidebar-minimizer brand-minimizer" type="button"></button>'
@@ -137,6 +154,54 @@ function loadMenu() {
 				$(this).remove();
 			});
 		}
+	}
+}
+
+
+// SubeDatosPendientes
+function subeDatosPendientes() {
+	if (window.elUsuario) {
+		var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
+		if (datosClientes) {
+			var datosMax = datosClientes.length;
+			uploadRegistro(0, datosMax);
+		} else {
+			alert('No hay datos guardados.');
+		}
+	}
+}
+function uploadRegistro(num, max) {
+	// Si hay internet
+	if (window.internet) {
+
+		$('#subedata').html('<div class="nav-link"><i class="icon-star"></i> SUBIENDO REGISTROS... ('+ (num+1) +' de '+ max +')</div>');
+		var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
+		if (datosClientes[num]) {
+			datosClientes[num].usuario = window.elUsuario.email;
+			datosClientes[num].password = window.elUsuario.pass;
+			$.ajax({
+				url	 : window.dataURL + 'saveCliente.php',
+				type : 'GET',
+				data : datosClientes[num]
+			}).done(function(txt) {
+				if (txt == 'Exito') {
+					num++;
+					if (num < max) {
+						setTimeout(function() {
+							uploadRegistro(num, max);
+						}, 500);
+					} else {
+						alert('Datos subidos correctamente.');
+					}
+				} else {
+					alert(txt);
+				}
+			});
+		}
+
+	// Si no hay internet
+	} else {
+		alert('Debes estar conectado a internet.');
 	}
 }
 
