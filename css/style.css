@@ -8919,7 +8919,7 @@ base-chart.chart {
   list-style: none; }
   .horizontal-bars li {
     position: relative;
-    height: 40px;
+    min-height: 40px;
     line-height: 40px;
     vertical-align: middle; }
     .horizontal-bars li .title {
@@ -8960,7 +8960,7 @@ base-chart.chart {
       margin-top: -9px;
       font-size: 0.875rem;
       font-weight: normal;
-      line-height: 40px;
+      line-height: 1rem;
       color: #151b1e; }
     .horizontal-bars.type-2 li .value {
       float: right;
