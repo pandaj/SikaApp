@@ -79,35 +79,6 @@
 	<script src="library/pace/pace.min.js"></script>
 	<script src="library/chart/Chart.min.js"></script>
 	<script>
-		function cargaDatos(desde, hasta) {
-			if (window.elUsuario) {
-				// Si no hay conexion a internet
-				if (window.internet) {
-					$.ajax({
-						url	 : window.dataURL + desde +'.php',
-						type : 'GET',
-						data : {
-							usuario : window.elUsuario.email,
-							password: window.elUsuario.pass
-						}
-					}).done(function(txt) {
-						if (txt.substr(0,5) != 'Error') {
-							window.localStorage.setItem("pag_"+ desde, txt);
-							$(hasta).html(txt);
-						} else {
-							alert(txt);
-						}
-					});
-				} else {
-					var datosCargados = JSON.parse( window.localStorage.getItem("pag_"+ desde) );
-					if (datosCargados) {
-						$(hasta).html(txt);
-					} else {
-						alert('No hay datos guardados. Por favor, conectate a internet.');
-					}
-				}
-			}
-		}
 		cargaDatos('datos_clientes_lgr', '#cont-datos');
 	</script>
 </body>

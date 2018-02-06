@@ -243,3 +243,53 @@ function loadHeader() {
 		);
 	}
 }
+
+
+// Carga Páginas
+function cargaDatos(desde, hasta) {
+	if (window.elUsuario) {
+		// Si no hay conexion a internet
+		if (window.internet) {
+			$.ajax({
+				url	 : window.dataURL + desde +'.php',
+				type : 'GET',
+				data : {
+					usuario : window.elUsuario.email,
+					password: window.elUsuario.pass
+				}
+			}).done(function(txt) {
+				if (txt.substr(0,5) != 'Error') {
+					window.localStorage.setItem("pag_"+ desde, txt);
+					$(hasta).html(txt);
+				} else {
+					alert(txt);
+				}
+			});
+		} else {
+			var datosCargados = window.localStorage.getItem("pag_"+ desde);
+			if (datosCargados) {
+				$(hasta).html(datosCargados);
+			} else {
+				alert('No hay datos guardados. Por favor, conectate a internet.');
+			}
+		}
+	}
+}
+
+
+// Guarda - Carga Datos Stats
+function guardaDatosStats(leDatos) {
+	var losDatosSave = {
+		datos : leDatos,
+		total : leDatos.length
+	};
+	window.localStorage.setItem("datos_estadisticas", JSON.stringify(losDatosSave) );
+}
+function cargaDatosStats() {
+	var leDatos = JSON.parse( window.localStorage.getItem("datos_estadisticas") );
+	if (leDatos) {
+		return leDatos;
+	} else {
+		alert('No hay datos guardados. Por favor, conectate a internet.');
+	}
+}

@@ -317,11 +317,7 @@
 							}
 							$('#carga').html(' [ DATOS CARGADOS ] ');
 							totalMax = datosArray.length;
-							var losDatosSave = {
-								datos : datosArray,
-								total : totalMax
-							};
-							window.localStorage.setItem("datos_estadisticas", JSON.stringify(losDatosSave) );
+							guardaDatosStats(datosArray);
 							cuentaDatos();
 
 						// Error
@@ -333,16 +329,11 @@
 				// Si Hay conexión a internet
 				} else {
 					var datosCargados = JSON.parse( window.localStorage.getItem("datos_estadisticas") );
-
-					if (datosCargados) {
-						$('#carga').html(' [ DATOS DESDE EL CACHE ] ');
-						datosArray = datosCargados.datos;
-						totalMax = datosCargados.total;
-						fechaIni = datosArray[0].fecha.substr(0,10);
-						cuentaDatos();
-					} else {
-						alert('No hay datos guardados. Por favor, conectate a internet.');
-					}
+					$('#carga').html(' [ DATOS DESDE EL CACHE ] ');
+					datosArray = datosCargados.datos;
+					totalMax = datosCargados.total;
+					fechaIni = datosArray[0].fecha.substr(0,10);
+					cuentaDatos();
 				}
 			}
 		}
@@ -362,24 +353,33 @@
 
 			// Prepara Datos de Lugares / Campañas / Usuarios / Regiones
 			for (Lkey in lugarNames) {
-				lugarNames[ Lkey ].total = 0;
-				lugarUsuario[ Lkey ] = lugarNames[ Lkey ];
+				if (lugarNames[ Lkey ] != null) {
+					lugarNames[ Lkey ].total = 0;
+					lugarUsuario[ Lkey ] = lugarNames[ Lkey ];
+					console.log(lugarUsuario[ Lkey ]);
+				}
 			}
 			for (Ckey in campaNames) {
-				campaNames[ Ckey ].total = 0;
-				campaUsuario[ Ckey ] = campaNames[ Ckey ];
+				if (campaNames[ Ckey ] != null) {
+					campaNames[ Ckey ].total = 0;
+					campaUsuario[ Ckey ] = campaNames[ Ckey ];
+				}
 			}
 			for (Ukey in usersNames) {
-				usersNames[ Ukey ].total = 0;
-				usersUsuario[ Ukey ] = usersNames[ Ukey ];
+				if (usersNames[ Ukey ] != null) {
+					usersNames[ Ukey ].total = 0;
+					usersUsuario[ Ukey ] = usersNames[ Ukey ];
+				}
 			}
 			// Lugares x Usuarios
 			for (Lkey2 in lugarUsuario) {
 				lugarUsuario[ Lkey2 ].users = new Array();
 				for (Ukey3 in usersNames) {
-					lugarUsuario[ Lkey2 ].users[Ukey3] = new Object();
-					for (datoU in usersNames[Ukey3]) {
-						lugarUsuario[ Lkey2 ].users[Ukey3][datoU] = usersNames[Ukey3][datoU];
+					if (usersNames[ Ukey3 ] != null) {
+						lugarUsuario[ Lkey2 ].users[Ukey3] = new Object();
+						for (datoU in usersNames[Ukey3]) {
+							lugarUsuario[ Lkey2 ].users[Ukey3][datoU] = usersNames[Ukey3][datoU];
+						}
 					}
 				}
 			}
@@ -387,9 +387,11 @@
 			for (Ukey2 in usersUsuario) {
 				usersUsuario[ Ukey2 ].campa = new Array();
 				for (Ckey3 in campaNames) {
-					usersUsuario[ Ukey2 ].campa[Ckey3] = new Object();
-					for (datoC in campaNames[Ckey3]) {
-						usersUsuario[ Ukey2 ].campa[Ckey3][datoC] = campaNames[Ckey3][datoC];
+					if (campaNames[ Ckey3 ] != null) {
+						usersUsuario[ Ukey2 ].campa[Ckey3] = new Object();
+						for (datoC in campaNames[Ckey3]) {
+							usersUsuario[ Ukey2 ].campa[Ckey3][datoC] = campaNames[Ckey3][datoC];
+						}
 					}
 				}
 			}
@@ -397,15 +399,14 @@
 			for (Ckey2 in campaUsuario) {
 				campaUsuario[ Ckey2 ].lugar = new Array();
 				for (Lkey3 in lugarNames) {
-					campaUsuario[ Ckey2 ].lugar[Lkey3] = new Object();
-					for (datoL in lugarNames[Lkey3]) {
-						campaUsuario[ Ckey2 ].lugar[Lkey3][datoL] = lugarNames[Lkey3][datoL];
+					if (lugarNames[ Lkey3 ] != null) {
+						campaUsuario[ Ckey2 ].lugar[Lkey3] = new Object();
+						for (datoL in lugarNames[Lkey3]) {
+							campaUsuario[ Ckey2 ].lugar[Lkey3][datoL] = lugarNames[Lkey3][datoL];
+						}
 					}
 				}
 			}
-			usersNames = null;
-			campaNames = null;
-			lugarNames = null;
 			
 			
 			// Crea Array para Datos del Grafico
