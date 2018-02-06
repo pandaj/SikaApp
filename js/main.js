@@ -60,7 +60,7 @@ function loadMenu() {
 		// Revisa si hay datos pendientes por subir
 		var subeDatosHTML = '';
 		var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
-		if (datosClientes && window.internet) {
+		if (datosClientes) {
 			subeDatosHTML = '<li class="nav-item" id="subedata">'+
 				'<a class="nav-link" href="javascript: subeDatosPendientes();">'+
 					'<i class="icon-star"></i> SUBIR REGISTROS PENDIENTES'+
@@ -155,12 +155,16 @@ function loadMenu() {
 // SubeDatosPendientes
 function subeDatosPendientes() {
 	if (window.elUsuario) {
-		var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
-		if (datosClientes) {
-			var datosMax = datosClientes.length;
-			uploadRegistro(0, datosMax);
+		if (window.internet) {
+			var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
+			if (datosClientes) {
+				var datosMax = datosClientes.length;
+				uploadRegistro(0, datosMax);
+			} else {
+				alert('No hay datos guardados.');
+			}
 		} else {
-			alert('No hay datos guardados.');
+			alert('Debes conectarte a internet para subir los datos.');
 		}
 	}
 }

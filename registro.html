@@ -467,6 +467,26 @@
 							}
 							datosClientes.push(datos);
 							window.localStorage.setItem("registros", JSON.stringify(datosClientes) );
+
+							$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
+							if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
+								$('#formbox-2 .alert').removeClass('alert-danger');
+								$('#formbox-2 .alert').addClass('alert-success');
+							}
+							$('#formbox-2 .alert').fadeIn(300);
+							$('#formbox-2 input').each(function() {
+								$(this).val('');
+							});
+							$('#formbox-2 select').each(function() {
+								$(this).val('');
+								$(this).trigger('change');
+							});
+							setTimeout(function() {
+								$('#formbox-2 .alert').fadeOut(300);
+							}, 1300);
+							setTimeout(function() {
+								activaTodo = true;
+							}, 1600);
 						}
 					});
 				}
