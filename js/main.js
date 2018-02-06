@@ -193,6 +193,7 @@ function uploadRegistro(num, max) {
 				} else {
 					alert('Datos subidos correctamente.');
 					$('#subedata').remove();
+					window.localStorage.removeItem('registros');
 				}
 			});
 		}
