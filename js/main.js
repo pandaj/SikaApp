@@ -63,7 +63,7 @@ function loadMenu() {
 		if (datosClientes) {
 			subeDatosHTML = '<li class="nav-item" id="subedata">'+
 				'<a class="nav-link" href="javascript: subeDatosPendientes();">'+
-					'<i class="icon-star"></i> SUBIR REGISTROS PENDIENTES'+
+					'<i class="icon-star"></i> Sube Registros Pendientes'+
 				'</a>'+
 			'</li>';
 		}
@@ -81,12 +81,12 @@ function loadMenu() {
 							'<i class="icon-plus"></i> Registrar Cliente'+
 						'</a>'+
 					'</li>'+
-					subeDatosHTML+
 					'<li class="nav-item acceso3">'+
 						'<a id="btn-3" class="nav-link" href="estadisticas.html">'+
 							'<i class="icon-chart"></i> Estadisticas Generales'+
 						'</a>'+
 					'</li>'+
+					subeDatosHTML+
 					'<li class="nav-title acceso3">'+
 						'Datos Detallados'+
 					'</li>'+
@@ -172,7 +172,7 @@ function uploadRegistro(num, max) {
 	// Si hay internet
 	if (window.internet) {
 
-		$('#subedata').html('<div class="nav-link"><i class="icon-star"></i> SUBIENDO REGISTROS... ('+ (num+1) +' de '+ max +')</div>');
+		$('#subedata').html('<div class="nav-link"><i class="icon-star"></i> Subiendo Registros... ('+ (num+1) +' de '+ max +')</div>');
 		var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
 		if (datosClientes[num]) {
 			datosClientes[num].usuario = window.elUsuario.email;
@@ -182,17 +182,17 @@ function uploadRegistro(num, max) {
 				type : 'GET',
 				data : datosClientes[num]
 			}).done(function(txt) {
-				if (txt == 'Exito') {
-					num++;
-					if (num < max) {
-						setTimeout(function() {
-							uploadRegistro(num, max);
-						}, 500);
-					} else {
-						alert('Datos subidos correctamente.');
-					}
+				num++;
+				if (txt != 'Exito') {
+					alert('Dato '+ num +': '+ txt);
+				}
+				if (num < max) {
+					setTimeout(function() {
+						uploadRegistro(num, max);
+					}, 500);
 				} else {
-					alert(txt);
+					alert('Datos subidos correctamente.');
+					$('#subedata').remove();
 				}
 			});
 		}
