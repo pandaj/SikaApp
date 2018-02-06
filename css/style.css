@@ -9320,9 +9320,19 @@ hr.transparent {
   .d-sm-down-none {
     display: none !important; } }
 
+#tabla-datos .tab-content .tab-pane .card-header .badge {
+	visibility:hidden;
+}
+
 @media (max-width: 991px) {
-  .d-md-down-none {
-    display: none !important; } }
+	.d-md-down-none { display: none !important; }
+	#tabla-datos .tab-content .tab-pane {
+		overflow:scroll;
+	}
+	#tabla-datos .tab-content .tab-pane .card-header .badge {
+		visibility:visible;
+	}
+}
 
 @media (max-width: 1199px) {
   .d-lg-down-none {
