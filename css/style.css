@@ -9321,7 +9321,7 @@ hr.transparent {
     display: none !important; } }
 
 #tabla-datos .tab-content .tab-pane .card-header .badge {
-	visibility:hidden;
+	display:none;
 }
 
 @media (max-width: 991px) {
@@ -9330,7 +9330,7 @@ hr.transparent {
 		overflow:scroll;
 	}
 	#tabla-datos .tab-content .tab-pane .card-header .badge {
-		visibility:visible;
+		display:block;
 	}
 }
 
