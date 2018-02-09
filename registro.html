@@ -245,10 +245,28 @@
 		});
 		var lasFonoKeys = new Array('0','1','2','3','4','5','6','7','8','9','+');	
 		$('input[name=fono]').keypress(function(evt) {
-			if (lasFonoKeys.indexOf(evt.key) < 0) {
+			if (lasKeys.indexOf(evt.key) < 0) {
 				return false;
 			} else if ( $('input[name=fono]').val().indexOf('+') >= 0 && evt.key == '+') {
 				return false;
+			}
+		});
+		$('input[name=fono]').change(function() {
+			var elTexto = $(this).val().toString();
+			var elTextoFin = elTexto;
+			var elLargo = elTexto.length;
+			for (var t = 0; t < elLargo; t++) {
+				var laLetra = elTexto.substr(t, 1);
+				if (lasKeys.indexOf(laLetra) < 0) {
+					elTextoFin = elTextoFin.replace(laLetra, '');
+				}
+			}
+			$(this).val(elTextoFin);
+		});
+		$('input[name=fono]').focus(function() {
+			var elTexto = $('input[name=fono]').val();
+			if (elTexto.indexOf('+56') < 0) {
+				$('input[name=fono]').val('+56' + elTexto);
 			}
 		});
 

@@ -9320,18 +9320,23 @@ hr.transparent {
   .d-sm-down-none {
     display: none !important; } }
 
-#tabla-datos .tab-content .tab-pane .card-header .badge {
-	display:none;
+#tabla-datos .tab-content .tab-pane .card-header .badge, #btn-scroll { display:none; font-size: 20px; }
+.badge i {
+    padding: 0 10px;
+}
+.badge .icon-arrow-left-circle, .badge .icon-arrow-right-circle {
+  color:#000;
+}
+.badge .icon-arrow-left-circle.active, .badge .icon-arrow-right-circle.active {
+  color:#FFF;
+}
+@media (max-width: 1550px) {
+  #tabla-datos .tab-content .tab-pane .fixbox { overflow:scroll; }
+  #tabla-datos .tab-content .tab-pane .card-header .badge, #btn-scroll { display:block; }
 }
 
 @media (max-width: 991px) {
 	.d-md-down-none { display: none !important; }
-	#tabla-datos .tab-content .tab-pane {
-		overflow:scroll;
-	}
-	#tabla-datos .tab-content .tab-pane .card-header .badge {
-		display:block;
-	}
 }
 
 @media (max-width: 1199px) {
@@ -9488,3 +9493,7 @@ hr.transparent {
       float: left; }
   *[dir="rtl"] .callout-default {
     border-right-color: #536c79; }
+
+.tab-oculta, .tab-oculta-2 {
+  display:none;
+}

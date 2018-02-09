@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="msapplication-tap-highlight" content="no" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	
+	<link rel='shortcut icon' type="image/x-icon" href="img/favicon.ico" />
+	<link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+	<title>Administrador SIKA</title>
+
+	<link href="library/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="library/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+
+	<script src="cordova.js"></script>
+	<script src="library/jquery/jquery-1.10.2.js"></script>
+	<script src="js/main.js"></script>
+	<script>
+		loginRedirige('index', 3);
+	</script>
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+
+	<!-- Header -->
+	<header id="header" class="app-header navbar">
+		<script> loadHeader(); </script>
+	</header>
+	<!-- FIN Header -->
+
+	<!-- Contenido -->
+	<div class="app-body">
+
+		<!-- Menu Lateral -->
+		<div id="side-menu" class="sidebar">
+			<script> loadMenu(); </script>
+		</div>
+		<!-- FIN Menu Lateral -->
+
+		<!-- Main content -->
+		<main class="main">
+
+			<!-- Breadcrumb -->
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item active">Estadisticas</li>
+			</ol>
+
+			<!-- Contenedor -->
+			<div class="container-fluid">
+				<div class="animated fadeIn">
+
+					<!-- Datos Globales -->
+					<div class="row">
+						<div class="col-sm-6 col-lg-3">
+							<div class="card text-white bg-primary">
+								<div class="card-body pb-0">
+									<h4 class="mb-0" id="clien_total">...</h4>
+									<p>Clientes Registrados</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="card text-white bg-success">
+								<div class="card-body pb-0">
+									<h4 class="mb-0" id="campa_total1">...</h4>
+									<p>Campañas Realizadas</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="card text-white bg-warning">
+								<div class="card-body pb-0">
+									<h4 class="mb-0" id="users_total1">...</h4>
+									<p>Usuarios Registradores</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="card text-white bg-danger">
+								<div class="card-body pb-0">
+									<h4 class="mb-0" id="lugar_total1">...</h4>
+									<p>Lugares de Campaña</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- FIN Datos Globales -->
+
+					<!-- Grafico -->
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-5">
+									<h4 class="card-title mb-0">Clientes Registrados</h4>
+									<div class="small text-muted" id="carga">...</div>
+								</div>
+							</div>
+							<div class="chart-wrapper" style="height:300px; margin-top:40px;">
+								<canvas id="main-chart" class="chart" height="300"></canvas>
+							</div>
+						</div>
+					</div>
+					<!-- FIN Grafico -->
+
+					<!-- Bloque Datos 1 -->
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									Detalle de Estadisticas
+								</div>
+								<div class="card-body">
+									<div class="row">
+
+										<!-- Detalle por Campaña -->
+										<div class="col-sm-12 col-lg-6">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="callout callout-success">
+														<small class="text-muted">CAMPAÑAS</small><br>
+														<strong class="h4" id="campa_total2">... <small>campañas</small></strong>
+													</div>
+												</div>
+											</div>
+											<hr class="mt-0">
+											<ul class="horizontal-bars type-2" id="datos-campa">
+												<!-- Cont -->
+											</ul>
+										</div>
+										<!-- FIN Detalle por Campaña -->
+
+										<!-- Detalle por Usuario -->
+										<div class="col-sm-12 col-lg-6">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="callout callout-warning">
+														<small class="text-muted">USUARIOS-REGISTRADORES</small><br>
+														<strong class="h4" id="users_total2">... <small>usuarios</small></strong>
+													</div>
+												</div>
+											</div>
+											<hr class="mt-0">
+											<ul class="horizontal-bars type-2" id="datos-users">
+												<!-- Cont -->
+											</ul>
+										</div>
+										<!-- FIN Detalle por Usuario -->
+
+										<!-- Detalle por Region -->
+										<div class="col-sm-12 col-lg-6">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="callout callout-primary">
+														<small class="text-muted">REGIÓN DONDE VIVEN LOS CLIENTES</small><br>
+														<strong class="h4" id="region_total">... <small>clientes</small></strong>
+													</div>
+												</div>
+											</div>
+											<hr class="mt-0">
+											<ul class="horizontal-bars type-2" id="datos-region">
+												<!-- Cont -->
+											</ul>
+										</div>
+										<!-- FIN Detalle por Region -->
+
+										<!-- Detalle por Lugar -->
+										<div class="col-sm-12 col-lg-6">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="callout callout-danger">
+														<small class="text-muted">LUGARES DE CAMPAÑA</small><br>
+														<strong class="h4" id="lugar_total2">... <small>lugares</small></strong>
+													</div>
+												</div>
+											</div>
+											<hr class="mt-0">
+											<ul class="horizontal-bars type-2" id="datos-lugar">
+												<!-- Cont -->
+											</ul>
+										</div>
+										<!-- FIN Detalle por Lugar -->
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- FIN Bloque Datos 1 -->
+
+					<!-- Bloque Datos 2 -->
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									Estadisticas Cruzadas
+								</div>
+								<div class="card-body">
+									<div class="row">
+
+										<!-- Detalle por Usuarios x Campaña -->
+										<div class="col-sm-12 col-lg-4">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="callout callout-success">
+														<small class="text-muted">USUARIOS x CAMPAÑA</small><br>
+														<strong class="h4" id="users_total3">... <small>usuarios</small></strong> x 
+														<strong class="h4" id="campa_total3">... <small>campañas</small></strong>
+													</div>
+												</div>
+											</div>
+											<hr class="mt-0">
+											<div id="users-x-campa">
+												<!-- cont -->
+											</div>
+										</div>
+										<!-- FIN Detalle por Usuarios x Campaña -->
+
+										<!-- Detalle por Campaña x Lugar -->
+										<div class="col-sm-12 col-lg-4">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="callout callout-warning">
+														<small class="text-muted">CAMPAÑA x LUGARES</small><br>
+														<strong class="h4" id="campa_total4">... <small>campañas</small></strong> x 
+														<strong class="h4" id="lugar_total3">... <small>lugares</small></strong>
+													</div>
+												</div>
+											</div>
+											<hr class="mt-0">
+											<div id="campa-x-lugar"></div>
+										</div>
+										<!-- FIN Detalle por Campaña x Lugar -->
+
+										<!-- Detalle por Lugar x Usuarios -->
+										<div class="col-sm-12 col-lg-4">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="callout callout-danger">
+														<small class="text-muted">LUGARES x USUARIOS</small><br>
+														<strong class="h4" id="lugar_total4">... <small>lugares</small></strong> x 
+														<strong class="h4" id="users_total4">... <small>usuarios</small></strong>
+													</div>
+												</div>
+											</div>
+											<hr class="mt-0">
+											<div id="lugar-x-users">
+												<!-- CONT -->
+											</div>
+										</div>
+										<!-- FIN Detalle por Lugar x Usuarios -->
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- FIN Bloque Datos 2 -->
+
+				</div>
+			</div>
+			<!-- /.conainer-fluid -->
+		</main>
+
+	</div>
+
+
+	<!-- Footer -->
+	<footer class="app-footer">
+		<span>Powered by <a href="http://redon.cl" target="_blank">Redon©</a> 2018.</span>
+	</footer>
+	<script src="library/popper/popper.min.js"></script>
+	<script src="library/bootstrap/bootstrap.min.js"></script>
+	<script src="js/app.js"></script>
+	<!-- FIN Footer -->
+
+	<script src="library/pace/pace.min.js"></script>
+	<script src="library/chart/Chart.min.js"></script>
+	<script src="js/comunes.js"></script>
+	<script>
+		// Carga Datos
+		var datosArray = new Array();
+		var lasFechas = new Array();
+		var fechaIni = '';
+		var fechaFin = getFechaHoy();
+		var totalMax = 0;
+		
+		function cargaDatosAsync(num) {
+			if (window.elUsuario) {
+				
+				// Si no hay conexion a internet
+				if (window.internet) {
+					$('#carga').html(' [ Cargando Datos... ] ');
+					$.ajax({
+						url	 : window.dataURL + 'datosStats.php',
+						type : 'GET',
+						data : {
+							usuario : window.elUsuario.email,
+							password: window.elUsuario.pass
+						}
+					}).done(function(txt) {
+						
+						// Si carga Datos
+						if (txt.substr(0,5) != 'Error') {
+							var datosA = txt.split('<-xx_xx->');
+							for (var a = 1; a < datosA.length; a++) {
+								var datosB = datosA[a].split('<-x_x->');
+								var newDato = new Object();
+								for (var b = 0; b < datosB.length; b++) {
+									var datosC = datosB[b].split('<-x->');
+									newDato[ datosC[0] ] = datosC[1];
+								}
+								if (fechaIni == '') {
+									fechaIni = newDato.fecha.substr(0,10);
+								}
+								datosArray.push(newDato);
+							}
+							$('#carga').html(' [ DATOS CARGADOS ] ');
+							totalMax = datosArray.length;
+							guardaDatosStats(datosArray);
+							cuentaDatos();
+
+						// Error
+						} else {
+							alert(txt);
+						}
+					});
+
+				// Si Hay conexión a internet
+				} else {
+					var datosCargados = JSON.parse( window.localStorage.getItem("datos_estadisticas") );
+					$('#carga').html(' [ DATOS DESDE EL CACHE ] ');
+					datosArray = datosCargados.datos;
+					totalMax = datosCargados.total;
+					fechaIni = datosArray[0].fecha.substr(0,10);
+					cuentaDatos();
+				}
+			}
+		}
+		
+		
+		// Cuenta Datos
+		var maxDay = 0;
+		var clienTotal = 0;
+		var clienUnico = new Array();
+		var campaUsuario = new Array();
+		var lugarUsuario = new Array();
+		var usersUsuario = new Array();
+		var regioUsuario = new Array();
+		function cuentaDatos() {
+			lasFechas = calculaFechas(fechaIni, fechaFin);
+			clienTotal = datosArray.length;
+
+			// Prepara Datos de Lugares / Campañas / Usuarios / Regiones
+			for (Lkey in lugarNames) {
+				if (lugarNames[ Lkey ] != null) {
+					lugarNames[ Lkey ].total = 0;
+					lugarUsuario[ Lkey ] = lugarNames[ Lkey ];
+					console.log(lugarUsuario[ Lkey ]);
+				}
+			}
+			for (Ckey in campaNames) {
+				if (campaNames[ Ckey ] != null) {
+					campaNames[ Ckey ].total = 0;
+					campaUsuario[ Ckey ] = campaNames[ Ckey ];
+				}
+			}
+			for (Ukey in usersNames) {
+				if (usersNames[ Ukey ] != null) {
+					usersNames[ Ukey ].total = 0;
+					usersUsuario[ Ukey ] = usersNames[ Ukey ];
+				}
+			}
+			// Lugares x Usuarios
+			for (Lkey2 in lugarUsuario) {
+				lugarUsuario[ Lkey2 ].users = new Array();
+				for (Ukey3 in usersNames) {
+					if (usersNames[ Ukey3 ] != null) {
+						lugarUsuario[ Lkey2 ].users[Ukey3] = new Object();
+						for (datoU in usersNames[Ukey3]) {
+							lugarUsuario[ Lkey2 ].users[Ukey3][datoU] = usersNames[Ukey3][datoU];
+						}
+					}
+				}
+			}
+			// Usuarios y Campañas
+			for (Ukey2 in usersUsuario) {
+				usersUsuario[ Ukey2 ].campa = new Array();
+				for (Ckey3 in campaNames) {
+					if (campaNames[ Ckey3 ] != null) {
+						usersUsuario[ Ukey2 ].campa[Ckey3] = new Object();
+						for (datoC in campaNames[Ckey3]) {
+							usersUsuario[ Ukey2 ].campa[Ckey3][datoC] = campaNames[Ckey3][datoC];
+						}
+					}
+				}
+			}
+			// Campaña x Lugares
+			for (Ckey2 in campaUsuario) {
+				campaUsuario[ Ckey2 ].lugar = new Array();
+				for (Lkey3 in lugarNames) {
+					if (lugarNames[ Lkey3 ] != null) {
+						campaUsuario[ Ckey2 ].lugar[Lkey3] = new Object();
+						for (datoL in lugarNames[Lkey3]) {
+							campaUsuario[ Ckey2 ].lugar[Lkey3][datoL] = lugarNames[Lkey3][datoL];
+						}
+					}
+				}
+			}
+			
+			
+			// Crea Array para Datos del Grafico
+			var datosGraf = new Array();
+			for (var f = 0; f < lasFechas.length; f++) {
+				datosGraf[ lasFechas[f] ] = 0;
+			}
+			
+			// Lee los datos cargados previamente
+			for (var s = 0; s < datosArray.length; s++) {
+				
+				// Filtros para Gráfico
+				var elFecha = datosArray[s].fecha.substr(0,10);
+				datosGraf[ elFecha ]++;
+				if (datosGraf[ elFecha ] > maxDay) {
+					maxDay = datosGraf[ elFecha ];
+				}
+
+				// Filtro Clientes Unicos
+				var elEmail = datosArray[s].email;
+				if (clienUnico.indexOf(elEmail) < 0) {
+					clienUnico.push(elEmail);
+				}
+
+				// Filtra datos Lugares / Usuarios / Campañas
+				var lugarID = datosArray[s].lugar_id;
+				lugarUsuario[lugarID].total++;
+				var campaID = datosArray[s].campa_id;
+				campaUsuario[campaID].total++;
+				var usersID = datosArray[s].user_id;
+				usersUsuario[usersID].total++;
+
+				// Lugares x Usuarios
+				lugarUsuario[lugarID].users[usersID].total++;
+				// Usuarios x Campañas
+				usersUsuario[usersID].campa[campaID].total++;
+				// Campaña x Lugares
+				campaUsuario[campaID].lugar[lugarID].total++;
+				/**/
+
+				// Filtra datos Regiones
+				var regionID = datosArray[s].region;
+				var regionPos = regioUsuario.indexOf(regionID);
+				if (regionPos < 0) {
+					regioUsuario.push({
+						id		: regionID,
+						nombre	: regionNames[regionID],
+						total	: 1
+					});
+				} else {
+					regioUsuario[regionID].total++;
+				}
+			}
+
+			// Clientes Totales y Unicos
+			$('#clien_total').html( clienTotal +' clientes | <small>'+ clienUnico.length +' únicos</small>');
+
+			// Muestra Datos por Campañas
+			var campaTotal = 0;
+			var campaInfo = '';
+			var campaXlugar = '';
+			for (c in campaUsuario) {
+				campaTotal++;
+				var elNumC = campaUsuario[c].total;
+				var elPorC = Math.round( 100 * (elNumC / clienTotal) );
+				var contActiva = ' <span class="badge badge-success">ACTIVA</span>';
+				if (parseInt(campaUsuario[c].activa) == 0) {
+					contActiva = ' <span class="badge badge-danger">INACTIVA</span>';
+				}
+				campaInfo += '<li>'+
+					'<i class="icon-globe"></i>'+
+					'<span class="title">'+ campaUsuario[c].nombre + contActiva +'</span>'+
+					'<span class="value">'+ elNumC +
+						' <span class="text-muted small">('+ elPorC +'%)</span>'+
+					'</span>'+
+					'<div class="bars">'+
+						'<div class="progress progress-xs">'+
+							'<div '+
+								'class="progress-bar bg-info" '+
+								'role="progressbar" '+
+								'style="width:'+ elPorC +'%" '+
+								'aria-valuenow="'+ elNumC +'" '+
+								'aria-valuemin="0" '+
+								'aria-valuemax="'+ clienTotal +'">'+
+							'</div>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+
+				// Lugares x Usuarios
+				campaXlugar += '<ul class="horizontal-bars type-2">'+
+					'<li>'+
+						'<i class="icon-location-pin"></i>'+
+						'<span class="title">'+ campaUsuario[c].nombre +'</span>'+
+					'</li>';
+
+				for (cc in campaUsuario[c].lugar) {
+					var elNumCC = campaUsuario[c].lugar[cc].total;
+
+					if (elNumCC > 0) {
+						var elPorCC = Math.round( 100 * (elNumCC / clienTotal) );
+						campaXlugar += '<li>'+
+								'<span class="title">'+ campaUsuario[c].lugar[cc].nombre +' | '+
+									'<small>'+ campaUsuario[c].lugar[cc].ciudad +', '+ regionNames[ campaUsuario[c].lugar[cc].region ] +'</small>'+
+								'</span>'+
+								'<span class="value">'+ elNumCC +
+									'<span class="text-muted small">('+ elPorCC +'%)</span>'+
+								'</span>'+
+								'<div class="bars">'+
+									'<div class="progress progress-xs">'+
+										'<div '+
+											'class="progress-bar bg-warning" '+
+											'role="progressbar" '+
+											'style="width:'+ elPorCC +'%" '+
+											'aria-valuenow="'+ elNumCC +'" '+
+											'aria-valuemin="0" '+
+											'aria-valuemax="'+ clienTotal +'">'+
+										'</div>'+
+									'</div>'+
+								'</div>'+
+							'</li>';
+					}
+				}
+				if (elNumC < 1) {
+					campaXlugar += '<li><span class="title">[ sin datos ]</span></li>';
+				}
+				campaXlugar += '</ul><hr class="mt-0" style="border:0;">';
+			}
+			$('#datos-campa').html(campaInfo);
+			$('#campa-x-lugar').html(campaXlugar);
+			$('#campa_total1').html( campaTotal );
+			$('#campa_total2').html( campaTotal +' <small>campañas</small>');
+			$('#campa_total3').html( campaTotal +' <small>campañas</small>');
+			$('#campa_total4').html( campaTotal +' <small>campañas</small>');
+
+			// Muestra Datos por Lugar
+			var lugarTotal = 0;
+			var lugarInfo = '';
+			var lugarXusers = '';
+			for (l in lugarUsuario) {
+				lugarTotal++;
+				var elNumL = lugarUsuario[l].total;
+				var elPorL = Math.round( 100 * (elNumL / clienTotal) );
+				lugarInfo += '<li>'+
+					'<i class="icon-location-pin"></i>'+
+					'<span class="title">'+ 
+						lugarUsuario[l].nombre +' | '+
+						'<small>'+ lugarUsuario[l].ciudad +', '+ regionNames[ lugarUsuario[l].region ] +'</small>'+
+					'</span>'+
+					'<span class="value">'+ elNumL +
+						' <span class="text-muted small">('+ elPorL +'%)</span>'+
+					'</span>'+
+					'<div class="bars">'+
+						'<div class="progress progress-xs">'+
+							'<div '+
+								'class="progress-bar bg-warning" '+
+								'role="progressbar" '+
+								'style="width:'+ elPorL +'%" '+
+								'aria-valuenow="'+ elNumL +'" '+
+								'aria-valuemin="0" '+
+								'aria-valuemax="'+ clienTotal +'">'+
+							'</div>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+
+				// Lugares x Usuarios
+				lugarXusers += '<ul class="horizontal-bars type-2">'+
+					'<li>'+
+						'<i class="icon-location-pin"></i>'+
+						'<span class="title">'+ lugarUsuario[l].nombre +' | '+
+							'<small>'+ lugarUsuario[l].ciudad +', '+ regionNames[ lugarUsuario[l].region ] +'</small>'+
+						'</span>'+
+					'</li>';
+
+				for (ll in lugarUsuario[l].users) {
+					var elNumLL = lugarUsuario[l].users[ll].total;
+
+					if (elNumLL > 0) {
+						var elPorLL = Math.round( 100 * (elNumLL / clienTotal) );
+						lugarXusers += '<li>'+
+								'<span class="title">'+ lugarUsuario[l].users[ll].nombre +'</span>'+
+								'<span class="value">'+ elNumLL +
+									' <span class="text-muted small">('+ elPorLL +'%)</span>'+
+								'</span>'+
+								'<div class="bars">'+
+									'<div class="progress progress-xs">'+
+										'<div '+
+											'class="progress-bar bg-warning" '+
+											'role="progressbar" '+
+											'style="width:'+ elPorLL +'%" '+
+											'aria-valuenow="'+ elNumLL +'" '+
+											'aria-valuemin="0" '+
+											'aria-valuemax="'+ clienTotal +'">'+
+										'</div>'+
+									'</div>'+
+								'</div>'+
+							'</li>';
+					}
+				}
+				if (elNumL < 1) {
+					lugarXusers += '<li><span class="title">[ sin datos ]</span></li>';
+				}
+				lugarXusers += '</ul><hr class="mt-0" style="border:0;">';
+			}
+			$('#datos-lugar').html(lugarInfo);
+			$('#lugar-x-users').html(lugarXusers);
+			$('#lugar_total1').html( lugarTotal );
+			$('#lugar_total2').html( lugarTotal +' <small>lugares</small>');
+			$('#lugar_total3').html( lugarTotal +' <small>lugares</small>');
+			$('#lugar_total4').html( lugarTotal +' <small>lugares</small>');
+
+			// Muestra Datos por Usuario
+			var usersTotal = 0;
+			var usersInfo = '';
+			var usersXcampa = '';
+			for (u in usersUsuario) {
+				usersTotal++;
+				var elNumU = usersUsuario[u].total;
+				var elPorU = Math.round( 100 * (elNumU / clienTotal) );
+				usersInfo += '<li style="height:50px;">'+
+					'<div class="avatar">'+
+						'<img src="img/avatares/'+ usersUsuario[u].foto +'" class="img-avatar">'+
+					'</div>'+
+					'<span class="title">'+ usersUsuario[u].nombre +'</span>'+
+					'<span class="value">'+ elNumU +
+						' <span class="text-muted small">('+ elPorU +'%)</span>'+
+					'</span>'+
+					'<div class="bars">'+
+						'<div class="progress progress-xs">'+
+							'<div '+
+								'class="progress-bar bg-danger" '+
+								'role="progressbar" '+
+								'style="width:'+ elPorU +'%" '+
+								'aria-valuenow="'+ elNumU +'" '+
+								'aria-valuemin="0" '+
+								'aria-valuemax="'+ clienTotal +'">'+
+							'</div>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+
+				// USUARIOS x CAMPAÑAS
+				usersXcampa += '<ul class="horizontal-bars type-2">'+
+					'<li>'+
+						'<div class="avatar">'+
+							'<img src="img/avatares/'+ usersUsuario[u].foto +'" class="img-avatar">'+
+						'</div>'+
+						'<span class="title">'+ usersUsuario[u].nombre +'</span>'+
+					'</li>';
+
+				for (uu in usersUsuario[u].campa) {
+					var elNumUU = usersUsuario[u].campa[uu].total;
+
+					if (elNumUU > 0) {
+						var elPorUU = Math.round( 100 * (elNumUU / clienTotal) );
+						var activaUU = ' <span class="badge badge-success">ACTIVA</span>';
+						if (parseInt(usersUsuario[u].campa[uu].activa) == 0) {
+							activaUU = ' <span class="badge badge-danger">INACTIVA</span>';
+						}
+						usersXcampa += '<li>'+
+								'<span class="title">'+ usersUsuario[u].campa[uu].nombre + activaUU +'</span>'+
+								'<span class="value">'+ elNumUU +
+									' <span class="text-muted small">('+ elPorUU +'%)</span>'+
+								'</span>'+
+								'<div class="bars">'+
+									'<div class="progress progress-xs">'+
+										'<div '+
+											'class="progress-bar bg-danger" '+
+											'role="progressbar" '+
+											'style="width:'+ elPorUU +'%" '+
+											'aria-valuenow="'+ elNumUU +'" '+
+											'aria-valuemin="0" '+
+											'aria-valuemax="'+ clienTotal +'">'+
+										'</div>'+
+									'</div>'+
+								'</div>'+
+							'</li>';
+					}
+				}
+				if (elNumU < 1) {
+					usersXcampa += '<li><span class="title">[ sin datos ]</span></li>';
+				}
+				usersXcampa += '</ul><hr class="mt-0" style="border:0;">';
+
+			}
+			$('#datos-users').html(usersInfo);
+			$('#users-x-campa').html(usersXcampa);
+			$('#users_total1').html( usersTotal );
+			$('#users_total2').html( usersTotal +' <small>usuarios</small>');
+			$('#users_total3').html( usersTotal +' <small>usuarios</small>');
+			$('#users_total4').html( usersTotal +' <small>usuarios</small>');
+
+			// Muestra Datos por Region
+			var regioTotal = regioUsuario.length;
+			$('#region_total').html( clienTotal +' <small>clientes</small>');
+			var regioInfo = '';
+			for (var r = 0; r < regioTotal; r++) {
+				var elNumR = regioUsuario[r].total;
+				var elPorR = Math.round( 100 * (elNumR / campaTotal) );
+				regioInfo += '<li>'+
+					'<i class="icon-globe"></i>'+
+					'<span class="title">'+ 
+						regioUsuario[r].nombre +
+					'</span>'+
+					'<span class="value">'+ elNumR +
+						' <span class="text-muted small">('+ elPorR +'%)</span>'+
+					'</span>'+
+					'<div class="bars">'+
+						'<div class="progress progress-xs">'+
+							'<div '+
+								'class="progress-bar bg-info" '+
+								'role="progressbar" '+
+								'style="width:'+ elPorR +'%" '+
+								'aria-valuenow="'+ elNumR +'" '+
+								'aria-valuemin="0" '+
+								'aria-valuemax="'+ clienTotal +'">'+
+							'</div>'+
+						'</div>'+
+					'</div>'+
+				'</li>';
+			}
+			$('#datos-region').html(regioInfo);
+			
+			// Limpia los Datos
+			var datosFinGraf = new Array();
+			for (key in datosGraf) {
+				datosFinGraf.push(datosGraf[key]);
+			}
+			
+			// Limpia Fechas
+			var newFechas = new Array();
+			for (var f = 0; f < lasFechas.length; f++) {
+				newFechas[f] = convierteFecha( lasFechas[f] );
+			}
+			lasFechas = newFechas;
+			
+			crearGrafico(datosFinGraf);
+		}
+		
+		
+		// Convierte Fecha
+		var mesesArray = new Array();
+		mesesArray['01'] = 'ene';
+		mesesArray['02'] = 'feb';
+		mesesArray['03'] = 'mar';
+		mesesArray['04'] = 'abr';
+		mesesArray['05'] = 'may';
+		mesesArray['06'] = 'jun';
+		mesesArray['07'] = 'jul';
+		mesesArray['08'] = 'ago';
+		mesesArray['09'] = 'sep';
+		mesesArray['10'] = 'oct';
+		mesesArray['11'] = 'nov';
+		mesesArray['12'] = 'dic';
+		function convierteFecha(fecha) {
+			var fechaData = fecha.split('-');
+			var newMes = mesesArray[ fechaData[1] ];
+			var newFecha = newMes +' '+ fechaData[2];
+			return newFecha;
+		}
+		
+		
+		// Calcula set de fechas
+		function calculaFechas(fechaIni, fechaFin) {
+			var d1 = new Date(fechaIni)*1 + 1*24*3600*1000;
+			var d2 = new Date(fechaFin)*1 + 2*24*3600*1000;
+			var dates = new Array();
+			
+			var oneDay = 24*3600*1000;
+			for (var ms = d1*1,last = d2*1; ms < last; ms += oneDay) {
+				var fechaTemp = new Date(ms);
+				var dia = fechaTemp.getDate();
+				if (dia < 10) dia = '0'+ dia;
+				var mes = fechaTemp.getMonth() + 1;
+				if (mes < 10) mes = '0'+ mes;
+				var year = fechaTemp.getFullYear();
+				dates.push(year +'-'+ mes +'-'+ dia);
+			}
+			return dates;
+		}
+		
+		// Crrea Grafico
+		function crearGrafico(datos) {
+			var grafiData = {
+				labels	: lasFechas,
+				datasets: [
+					{
+						label						: 'Clientes',
+						backgroundColor				: convertHex($.brandInfo, 10),
+						borderColor					: $.brandInfo,
+						pointHoverBackgroundColor	: '#fff',
+						borderWidth					: 2,
+						data						: datos
+					}
+				]
+			};
+			var grafiOpcion = {
+				maintainAspectRatio	: false,
+				legend				: { display : false },
+				scales				: {
+					xAxes : [{
+						gridLines: {
+							drawOnChartArea : false,
+						}
+					}],
+					yAxes : [{
+						ticks: {
+							beginAtZero		: true,
+							maxTicksLimit	: 1,
+							stepSize		: Math.round(maxDay/5),
+							max				: maxDay
+						}
+					}]
+				},
+				elements : {
+					point : {
+						radius				: 0,
+						hitRadius			: 10,
+						hoverRadius			: 4,
+						hoverBorderWidth	: 3
+					}
+				}
+			};
+			var ctx = $('#main-chart');
+			var mainChart = new Chart(ctx, {
+				type	: 'line',
+				data	: grafiData,
+				options	: grafiOpcion
+			});
+		}
+
+
+		// Ejecuta al cargarse todo
+		cargaInicial('users');
+		function ejecutaInicio() {
+			cargaDatosAsync(1);
+		}
+		var activaTabs = true;
+		function abrirTab(elTab) {
+			if (activaTabs) {
+				activaTabs = false;
+				$('#tab-'+ elTab +' .tab-oculta').slideToggle(500, function(){
+					activaTabs = true;
+				});
+			}
+		}
+		function abrirTabMini(elTab, num) {
+			if (activaTabs) {
+				activaTabs = false;
+				$('#tab-'+ elTab +'-'+ num).slideToggle(500, function(){
+					activaTabs = true;
+				});
+			}
+		}
+	</script>
+
+</body>
+</html>

@@ -61,9 +61,9 @@ function loadMenu() {
 		var subeDatosHTML = '';
 		var datosClientes = JSON.parse( window.localStorage.getItem("registros") );
 		if (datosClientes) {
-			subeDatosHTML = '<li class="nav-item" id="subedata">'+
+			subeDatosHTML = '<li class="nav-item btn btn-lg btn-warning" id="subedata">'+
 				'<a class="nav-link" href="javascript: subeDatosPendientes();">'+
-					'<i class="icon-star"></i> Sube Registros Pendientes'+
+					'<i class="icon-star"></i>Sube Registros<br>Pendientes'+
 				'</a>'+
 			'</li>';
 		}
@@ -86,7 +86,6 @@ function loadMenu() {
 							'<i class="icon-chart"></i> Estadisticas Generales'+
 						'</a>'+
 					'</li>'+
-					subeDatosHTML+
 					'<li class="nav-title acceso3">'+
 						'Datos Detallados'+
 					'</li>'+
@@ -123,6 +122,7 @@ function loadMenu() {
 							'<i class="icon-settings"></i> Admin. Campañas'+
 						'</a>'+
 					'</li>'+*/
+					subeDatosHTML +
 				'</ul>'+
 			'</nav>'+
 			'<button class="sidebar-minimizer brand-minimizer" type="button"></button>'
@@ -238,12 +238,12 @@ function loadHeader() {
 						'<img src="img/avatares/'+ window.elUsuario.foto +'" class="img-avatar" />'+
 					'</div>'+
 				'</li>'+
-				'<li class="nav-item d-md-down-none">'+
+				'<li class="nav-item d-md-down-none" style="display:block !important;">'+
 					'<a class="nav-link" href="javascript: logout();">'+
 						'<i class="fa fa-lock"></i> Logout'+
 					'</a>'+
 				'</li>'+
-				'<li class="nav-item d-md-down-none"></li>'+
+				'<li class="nav-item d-md-down-none" style="display:block !important; min-width:10px;"></li>'+
 			'</ul>'
 		);
 	}
