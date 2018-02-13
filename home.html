@@ -282,8 +282,11 @@
 		// Cuenta Datos
 		var maxDay = 0;
 		var clienTotal = 0;
+		var campaIDs = new Array();
 		var campaUsuario = new Array();
+		var lugarIDs = new Array();
 		var lugarUsuario = new Array();
+		var regioIDs = new Array();
 		var regioUsuario = new Array();
 		function cuentaDatos() {
 			lasFechas = calculaFechas(fechaIni, fechaFin);
@@ -308,8 +311,9 @@
 
 				// Filtra datos Lugares
 				var lugarID = datosArray[s].lugar_id;
-				var lugarPos = lugarUsuario.indexOf(lugarID);
+				var lugarPos = lugarIDs.indexOf(lugarID);
 				if (lugarPos < 0) {
+					lugarIDs.push(lugarID);
 					lugarUsuario.push({
 						id		: lugarID,
 						nombre	: lugarNames[lugarID].nombre,
@@ -323,8 +327,9 @@
 
 				// Filtra datos Campañas
 				var campaID = datosArray[s].campa_id;
-				var campaPos = campaUsuario.indexOf(campaID);
+				var campaPos = campaIDs.indexOf(campaID);
 				if (campaPos < 0) {
+					campaIDs.push(campaID);
 					campaUsuario.push({
 						id		: campaID,
 						nombre	: campaNames[campaID].nombre,
@@ -332,20 +337,21 @@
 						total	: 1
 					});
 				} else {
-					campaUsuario[campaID].total++;
+					campaUsuario[campaPos].total++;
 				}
 
 				// Filtra datos Regiones
 				var regionID = datosArray[s].region;
-				var regionPos = regioUsuario.indexOf(regionID);
+				var regionPos = regioIDs.indexOf(regionID);
 				if (regionPos < 0) {
+					regioIDs.push(regionID);
 					regioUsuario.push({
 						id		: regionID,
 						nombre	: regionNames[regionID],
 						total	: 1
 					});
 				} else {
-					regioUsuario[regionID].total++;
+					regioUsuario[regionPos].total++;
 				}
 			}
 

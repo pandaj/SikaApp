@@ -141,7 +141,7 @@
 						<div class="input-group mb-3">
 							<span class="input-group-addon"><i class="icon-map"></i></span>
 							<select class="form-control" name="user_region">
-								<option value="">[ Región ]</option>
+								<option value="">[ Región ] (opcional)</option>
 								<option value="metropolitana">Región Metropolitana</option>
 								<option value="region1">I Región</option>
 								<option value="region2">II Región</option>
@@ -163,7 +163,7 @@
 						<div class="input-group mb-4">
 							<span class="input-group-addon"><i class="icon-location-pin"></i></span>
 							<select class="form-control" name="user_ciudad">
-								<option value="">[ Ciudad o Comuna ]</option>
+								<option value="">[ Ciudad o Comuna ] (opcional)</option>
 							</select>
 						</div>
 
@@ -243,7 +243,7 @@
 				}, 500);
 			}
 		});
-		var lasFonoKeys = new Array('0','1','2','3','4','5','6','7','8','9','+');	
+		var lasKeys = new Array('0','1','2','3','4','5','6','7','8','9','+');	
 		$('input[name=fono]').keypress(function(evt) {
 			if (lasKeys.indexOf(evt.key) < 0) {
 				return false;
@@ -277,7 +277,7 @@
 				else if (regionID == 'metropolitana')	regionID = 13;
 				else									regionID = parseInt( regionID.replace('region','') );
 			
-				$(elDiv).html('<option value="">[ Ciudad o Comuna ]</option>');
+				$(elDiv).html('<option value="">[ Ciudad o Comuna ] (opcional)</option>');
 				$(elDiv).val('');
 				$(elDiv).trigger('change');
 				
