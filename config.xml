@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.phonegap.example" versionCode="10" version="1.0.0">
-	<name>GitHub PhoneGap 2018</name>
+	<name>SIKA - FormApp 2018</name>
 	<description>
-		Aplicacion de prueba
+		Formularios SIKA
 	</description>
-	<author href="http://juliocofre.cl" email="mail@juliocofre.cl">
-		Julio Cofre Gonzalez
+	<author href="http://redon.cl" email="cofre@redon.cl">
+		REDON
     </author>
 	<content src="index.html" />
 
