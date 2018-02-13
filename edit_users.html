@@ -111,61 +111,6 @@
 				}
 			}
 		}
-		var activaTodo = true;
-		function borrarUsuario(id) {
-			if (activaTodo) {
-				if (window.elUsuario) {
-					if (window.internet) {
-						var confirma = confirm("¿ Estás seguro de querer eliminar para siempre a "+ $('#nombre-'+ id).html() +" ?");
-						if (confirma == true) {
-							activaTodo = false;
-							$.ajax({
-								url : window.dataURL +'adminQuerys.php',
-								type: 'POST',
-								data: {
-									usuario : window.elUsuario.email,
-									password: window.elUsuario.pass
-									dato	: id
-								}
-							}).done(function(txt) {
-								if (txt == 'Exito') {
-									$('.card .alert').removeClass('alert-danger');
-									$('.card .alert').addClass('alert-success');
-									$('.card .alert strong').html('Usuario eliminado correctamente.');
-									$('.card .alert').fadeIn(300);
-									setTimeout(function() {
-										$('.card .alert').fadeOut(300);
-									}, 2300);
-									setTimeout(function() {
-										cargaDatos('edit_users', '#users-cont');
-									}, 2600);
-								} else {
-									activaTodo = true;
-									$('.card .alert strong').html(txt);
-									$('.card .alert').fadeIn(300);
-								}
-							});
-						}
-					} else {
-						alert('Debes estar conectado para realizar cambios.');
-					}
-				}
-			}
-		}
-		function nuevoUsuario() {
-			if (window.elUsuario) {
-				if (window.internet) {
-					location.href = 'edit_user_crear.html';
-				}
-			}
-		}
-		function editaUsuario(id) {
-			if (window.elUsuario) {
-				if (window.internet) {
-					location.href = 'edit_user_editar.html?id='+ id;
-				}
-			}
-		}
 		cargaDatos('edit_users', '#users-cont');
 	</script>
 

@@ -109,19 +109,19 @@ function loadMenu() {
 							'<i class="icon-list"></i> Clientes por Usuario'+
 						'</a>'+
 					'</li>'+
-					/*'<li class="nav-title acceso5">'+
+					'<li class="nav-title acceso5">'+
 						'Administración'+
 					'</li>'+
 					'<li class="nav-item acceso7">'+
 						'<a id="btn-8" class="nav-link" href="edit_users.html">'+
-							'<i class="icon-people"></i> Admin. Usuarios'+
+							'<i class="icon-people"></i> Ver Usuarios'+
 						'</a>'+
 					'</li>'+
 					'<li class="nav-item acceso5">'+
 						'<a id="btn-9" class="nav-link" href="edit_campa.html">'+
-							'<i class="icon-settings"></i> Admin. Campañas'+
+							'<i class="icon-settings"></i> Ver Campañas'+
 						'</a>'+
-					'</li>'+*/
+					'</li>'+
 					subeDatosHTML +
 				'</ul>'+
 			'</nav>'+
