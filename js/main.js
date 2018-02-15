@@ -112,14 +112,19 @@ function loadMenu() {
 					'<li class="nav-title acceso5">'+
 						'Administración'+
 					'</li>'+
-					'<li class="nav-item acceso7">'+
-						'<a id="btn-8" class="nav-link" href="edit_users.html">'+
-							'<i class="icon-people"></i> Ver Usuarios'+
-						'</a>'+
-					'</li>'+
 					'<li class="nav-item acceso5">'+
 						'<a id="btn-9" class="nav-link" href="edit_campa.html">'+
 							'<i class="icon-settings"></i> Ver Campañas'+
+						'</a>'+
+					'</li>'+
+					'<li class="nav-item acceso5">'+
+						'<a id="btn-10" class="nav-link" href="edit_lugar.html">'+
+							'<i class="icon-settings"></i> Ver Lugares'+
+						'</a>'+
+					'</li>'+
+					'<li class="nav-item acceso7">'+
+						'<a id="btn-8" class="nav-link" href="edit_users.html">'+
+							'<i class="icon-people"></i> Ver Usuarios'+
 						'</a>'+
 					'</li>'+
 					subeDatosHTML +

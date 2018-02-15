@@ -20,12 +20,6 @@
 	<script>
 		loginRedirige('index', 1);
 	</script>
-	<style>
-		.input-group .form-control {
-			height:50px !important;
-			font-size:20px;
-		}
-	</style>
 </head>
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
 
@@ -46,16 +40,15 @@
 
 		<!-- Main content -->
 		<main class="main row justify-content-center">
-			<div class="col-md-12">
+			<div class="col-md-10">
 
 				<!-- FORM -->
-				<div class="card mx-4" id="el-form" style="display: none;">
+				<div class="card mx-4" id="el-form" style="display: none;;">
 					<div id="formbox-1" class="card-body p-4">
 						<h1>Asocia una Campaña</h1>
-						<h5>Selecciona una campaña para asociarla al registro de clientes.</h5>
-						<br />
-						<div class="alert alert-danger btn-lg" style="display:none; text-transform:uppercase;">
-							<strong>...</strong>
+						<p class="text-muted">Selecciona una campaña para asociarla al registro de clientes.</p>
+						<div class="alert alert-danger alert-lg" style="display:none;">
+							<strong>ESTO ES UN MENSAJE</strong>
 						</div>
 						<div class="input-group mb-3">
 							<span class="input-group-addon"><i class="icon-badge"></i></span>
@@ -99,14 +92,13 @@
 							</select>
 							<input type="text" class="form-control" name="new_lugar" placeholder="Nuevo Lugar" style="display:none;" maxlength="100" />
 						</div>
-						<button type="button" class="btn btn-block btn-success btn-lg" onClick="asociarCamp();">Asociar Campaña</button>
+						<button type="button" class="btn btn-block btn-success" onClick="asociarCamp();">Asociar Campaña</button>
 					</div>
 					<div id="formbox-2" class="card-footer p-4" style="display:none;">
 						<h1>Registro de Cliente</h1>
-						<h5>Ingresa los datos del cliente.</h5>
-						<br />
-						<div class="alert alert-danger btn-lg" style="display:none; text-transform:uppercase;">
-							<strong>...</strong>
+						<p class="text-muted">Ingresa los datos del cliente.</p>
+						<div class="alert alert-danger" style="display:none;">
+							<strong>Danger!</strong>
 						</div>
 						<div class="input-group mb-3">
 							<span class="input-group-addon"><i class="icon-user"></i></span>
@@ -175,7 +167,7 @@
 							</select>
 						</div>
 
-						<button type="button" class="btn btn-block btn-success btn-lg" onClick="registraCliente();">Registrar Cliente</button>
+						<button type="button" class="btn btn-block btn-success" onClick="registraCliente();">Registrar Cliente</button>
 					</div>
 				</div>
 				<!-- FIN FORM -->
@@ -241,6 +233,16 @@
 		$('select[name=camp_ciudad]').change(function() {
 			cambiaLugares( $(this).val(), 'select[name=camp_lugar]');
 		});
+		$('select[name=camp_lugar]').change(function() {
+			if ($(this).val() == 'new_place') {
+				$(this).animate({opacity:0}, 500);
+				$(this).attr('disabled', 'disabled');
+				setTimeout(function() {
+					$('select[name=camp_lugar]').animate({opacity:1}, 500);
+					$('input[name=new_lugar]').fadeIn(500);
+				}, 500);
+			}
+		});
 		var lasKeys = new Array('0','1','2','3','4','5','6','7','8','9','+');	
 		$('input[name=fono]').keypress(function(evt) {
 			if (lasKeys.indexOf(evt.key) < 0) {
@@ -283,6 +285,17 @@
 					var comuna = ciudadesChile[regionID][c];
 					$(elDiv).append('<option value="'+ comuna +'">'+ comuna +'</option>');
 				}
+				if (elDiv == 'select[name=camp_ciudad]' && $('input[name=new_lugar]').is(':visible') ) {
+					$('select[name=camp_lugar]').val('');
+					$('select[name=camp_lugar]').trigger('change');
+					$('input[name=new_lugar]').val('');
+					$('input[name=new_lugar]').fadeOut(500);
+					$('select[name=camp_lugar]').animate({opacity:0}, 500);
+					setTimeout(function() {
+						$('select[name=camp_lugar]').removeAttr('disabled');
+						$('select[name=camp_lugar]').animate({opacity:1}, 500);
+					}, 500);
+				}
 			}
 		}
 
@@ -298,20 +311,35 @@
 						$(elDiv).append('<option value="'+ lugar.id +'">'+ lugar.nombre +'</option>');
 					}
 				}
+				$(elDiv).append('<option value="new_place">[ Nuevo Lugar ]</option>');
+				
+				if ($('input[name=new_lugar]').is(':visible') ) {
+					$('input[name=new_lugar]').val('');
+					$('input[name=new_lugar]').fadeOut(500);
+					$('select[name=camp_lugar]').animate({opacity:0}, 500);
+					setTimeout(function() {
+						$('select[name=camp_lugar]').removeAttr('disabled');
+						$('select[name=camp_lugar]').animate({opacity:1}, 500);
+					}, 500);
+				}
 			}
 		}
 		function asociarCamp() {
 			if (activaTodo) {
 				if ( $('select[name=campa]').val() != '' && $('select[name=camp_region]').val() != '' && $('select[name=camp_ciudad]').val() != '' && $('select[name=camp_lugar]').val() != '') {
-					activaTodo = false;
-					$('#formbox-1').animate({opacity:0}, 500);
-					setTimeout(function() {
-						$('#formbox-1').hide();
-						$('#formbox-2').fadeIn(500);
-					}, 500);
-					setTimeout(function() {
-						activaTodo = true;
-					}, 1000);
+					if ( $('select[name=camp_lugar]').val() == 'new_place' && $('input[name=new_lugar]').val().length < 2) {
+						alertas('Debes ingresar el nombre del nuevo lugar.');
+					} else {
+						activaTodo = false;
+						$('#formbox-1').animate({opacity:0}, 500);
+						setTimeout(function() {
+							$('#formbox-1').hide();
+							$('#formbox-2').fadeIn(500);
+						}, 500);
+						setTimeout(function() {
+							activaTodo = true;
+						}, 1000);
+					}
 				} else {
 					alertas('Debes completar todos los datos.');
 				}
@@ -360,6 +388,10 @@
 							tipo		: '',
 							minText		: 1,
 							aleCompleta	: 'Error #003. Ha ocurrido un error con los datos de campaña. Por favor, actualice esta página.'
+						},{
+							input		: $('input[name=new_lugar]'),
+							tipo		: '',
+							minText		: 0
 						},{
 							input		: $('input[name=nombre]'),
 							tipo		: 'nombre',
@@ -418,7 +450,25 @@
 								data : datos
 							}).done(function(txt) {
 								if (txt == 'Exito') {
-									exitoForm();
+									$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
+									if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
+										$('#formbox-2 .alert').removeClass('alert-danger');
+										$('#formbox-2 .alert').addClass('alert-success');
+									}
+									$('#formbox-2 .alert').fadeIn(300);
+									$('#formbox-2 input').each(function() {
+										$(this).val('');
+									});
+									$('#formbox-2 select').each(function() {
+										$(this).val('');
+										$(this).trigger('change');
+									});
+									setTimeout(function() {
+										$('#formbox-2 .alert').fadeOut(300);
+									}, 1300);
+									setTimeout(function() {
+										activaTodo = true;
+									}, 1600);
 								} else {
 									alertas(txt);
 								}
@@ -434,33 +484,30 @@
 							}
 							datosClientes.push(datos);
 							window.localStorage.setItem("registros", JSON.stringify(datosClientes) );
-							exitoForm();
+
+							$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
+							if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
+								$('#formbox-2 .alert').removeClass('alert-danger');
+								$('#formbox-2 .alert').addClass('alert-success');
+							}
+							$('#formbox-2 .alert').fadeIn(300);
+							$('#formbox-2 input').each(function() {
+								$(this).val('');
+							});
+							$('#formbox-2 select').each(function() {
+								$(this).val('');
+								$(this).trigger('change');
+							});
+							setTimeout(function() {
+								$('#formbox-2 .alert').fadeOut(300);
+							}, 1300);
+							setTimeout(function() {
+								activaTodo = true;
+							}, 1600);
 						}
 					});
 				}
 			}
-		}
-
-		function exitoForm() {
-			$('#formbox-2 .alert strong').html('El cliente se ha registrado correctamente.');
-			if ($('#formbox-2 .alert').hasClass('alert-danger') ) {
-				$('#formbox-2 .alert').removeClass('alert-danger');
-				$('#formbox-2 .alert').addClass('alert-success');
-			}
-			$('#formbox-2 .alert').fadeIn(300);
-			$('#formbox-2 input').each(function() {
-				$(this).val('');
-			});
-			$('#formbox-2 select').each(function() {
-				$(this).val('');
-				$(this).trigger('change');
-			});
-			setTimeout(function() {
-				activaTodo = true;
-			}, 600);
-			setTimeout(function() {
-				$('#formbox-2 .alert').fadeOut(300);
-			}, 5000);
 		}
 	</script>
 
