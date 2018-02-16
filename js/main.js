@@ -187,18 +187,22 @@ function uploadRegistro(num, max) {
 				type : 'GET',
 				data : datosClientes[num]
 			}).done(function(txt) {
-				num++;
-				if (txt != 'Exito') {
-					alert('Dato '+ num +': '+ txt);
-				}
-				if (num < max) {
-					setTimeout(function() {
-						uploadRegistro(num, max);
-					}, 500);
+				if (txt.substr(0,5) != 'Error') {
+					num++;
+					if (txt != 'Exito') {
+						alert('Dato '+ num +': '+ txt);
+					}
+					if (num < max) {
+						setTimeout(function() {
+							uploadRegistro(num, max);
+						}, 500);
+					} else {
+						alert('TODOS LOS DATOS HAN SIDO SUBIDOS.');
+						$('#subedata').remove();
+						window.localStorage.removeItem('registros');
+					}
 				} else {
-					alert('Datos subidos correctamente.');
-					$('#subedata').remove();
-					window.localStorage.removeItem('registros');
+					alert(txt);
 				}
 			});
 		}
@@ -212,9 +216,8 @@ function uploadRegistro(num, max) {
 
 // Log Out
 function logout() {
-	var confirma = confirm("¿ Realmente quieres salir ?");
+	var confirma = confirm("¿ Realmente quieres cerrar tu cuenta ? (se perderán todos los datos que no hayan sido subidos)");
 	if (confirma == true) {
-		//window.localStorage.removeItem("usuario");
 		window.localStorage.clear();
 		setTimeout(function() {
 			location.href = 'index.html';
